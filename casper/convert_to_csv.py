@@ -4,10 +4,62 @@ import sys
 import logging
 from logging import Logger
 import zipfile
-from harmony_service_lib.logging import build_logger
+import json
 from casper.file_ops import valid_input_file, valid_workable_file
 
 default_logger = logging.getLogger(__name__)
+
+def remove_blank_lines(text):
+    lines = text.splitlines()  # Split the string into a list of lines
+    real_lines = [line for line in lines if line.strip()]  # Filter out blank lines
+    return "\n\t\t".join(real_lines) 
+
+def get_group_attributes(ds): 
+    group_attrs = ''
+    for node in ds.subtree:
+        if node.path != '/' and len(node.attrs) > 0:
+            group_attrs += f'\n# Group {node.path} Attributes:\n\t'
+            foo = {k:str(v) for k,v in node.attrs.items()}
+            foo = dict(sorted(foo.items()))
+            f_attrs = [f'\t{k}: {remove_blank_lines(v)}' for k,v in foo.items()]
+            group_attrs += "\n\t".join(f_attrs)
+    return group_attrs
+
+def create_markdown(md, ds, input_filename):
+    header = f"# {len(md)} CSV files created for {input_filename} based on dimensional schemas\n\n"
+    attrs = ds.attrs
+    data = ""
+    for k,v in md.items():
+        data += f"## {v['filename']}\n"
+        data += f"\tdimensions:"
+        if len(k) > 0:
+            data += f"  {', '.join(k)}"
+        data += f"\n\tnon-dimension coordinates:"
+        coords = [c for c in v['coords'] if c not in v['keys']]
+        if len(coords) > 0:
+            data += f"  {', '.join(coords)}"
+        data += f"\n\t{len(v["vrbs"])} variables:\n"
+        if len(v["vrbs"]) > 0:
+            data += f"\t\t{'\n\t\t'.join(v["vrbs"])}\n\n"
+ 
+    foo = {k:str(v) for k,v in attrs.items()}
+    foo = dict(sorted(foo.items()))
+    f_attrs = [f'\t{k}: {remove_blank_lines(v)}' for k,v in foo.items()]
+    a_val = f"# {input_filename} Global Attributes:\n\t"
+    a_val += "\n\t".join(f_attrs)
+    group_attrs = get_group_attributes(ds)
+    content = f"""{header}\n{data}\n{a_val}\n{group_attrs}"""
+    return content
+
+def json_readme(ds, input_filename, json_obj):
+    attrs = ds.attrs
+    foo = {k: str(v) for k,v in attrs.items()}
+    json_obj[f'{input_filename} Global Attributes:'] = dict(sorted(foo.items()))
+    for node in ds.subtree:
+        if node.path != '/' and len(node.attrs) > 0:
+            foo = {k: str(v) for k,v in node.attrs.items()}
+            json_obj[f'Group {node.path} Attributes:'] = dict(sorted(foo.items()))
+    return
 
 def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) -> int:
     """
@@ -22,11 +74,14 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
     xr.set_options(use_new_combine_kwarg_defaults=True)
     num_csv_files = 0
     schemas = {}
+    md = {}
+    json_obj = {}
+    json_obj['Notice'] = 'The Readme.md file includes the same information'
 
     try:
         # Open file as xarray datatree
         data = xr.open_datatree(fname)
-
+        
         # Loops datatree items to gather info for various dimension groups
         for path,ds in data.to_dict().items():
             if path=="/": 
@@ -40,22 +95,34 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
                 schemas[dims].append(varname)
 
         input_filename = fname.split('/')[-1]
-        vals = list(schemas.values())
+        vals = list(schemas.items())
 
         # Create the zip file object in write mode
         with zipfile.ZipFile(zip_file, 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zf:
             logger.info(f'Creating {len(vals)} CSV files for {input_filename}')
+
             for idx in range(len(vals)):
+                dims,vvs = vals[idx]
                 op_file = f"{input_filename}-{idx}.csv"
                 with zf.open(op_file, 'w', force_zip64=True) as csv_file:
-                    vvs = vals[idx]
                     ds = xr.combine_by_coords([data[vv].rename(vv) for vv in vvs])
+                    # Order columns: dimensions, non-dimensional coordinates, rest of variables
+                    cols = list(dims) + list(ds.coords) + vvs
+                    ds = ds[cols]
+                
+                    # Add info to markdown and json dictionaries for creation of Readmes
+                    md[dims] = {'filename': op_file, 'keys': dims, 'coords': list(ds.coords), 'vrbs': vvs}
+                    json_obj[op_file] = {'dimensions': ','.join(list(dims)),
+                                        'non-dimensional coordinates': ','.join([c for c in list(ds.coords) if c not in list(dims)]),
+                                        'variables': vvs
+                                        }
 
-                    # Get primary dimension variable name
-                    dim_var = list(ds.sizes.keys())[0]
-
-                    chunk_size = 1000
-                    data_len = len(ds[f'{dim_var}'])
+                    chunk_size = 100
+                    data_len = 0
+                    for x in ds.sizes.keys():
+                        if len(ds[f'{x}']) > data_len:
+                            data_len = len(ds[f'{x}'])
+                            dim_var = x
                     for i in range(0, data_len, chunk_size):
                         # Process a slice of the dataset
                         indexer = {dim_var: slice(i, i + chunk_size)}
@@ -70,6 +137,18 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
                         del df_chunk
                 logger.info(f' {op_file} added to zip file')
                 num_csv_files += 1
+
+            # Create markdown and json Readme files 
+            readme_contents = create_markdown(md, data, input_filename)
+            readme_file = 'Readme.md'
+            with zf.open(readme_file, 'w') as file:
+                file.write(readme_contents.encode('utf-8'))
+                
+            # Create JSON file with pretty printing
+            json_readme(data,input_filename,json_obj)
+            json_file = "Readme.json"
+            json_data = json.dumps(json_obj, indent=4)
+            zf.writestr(json_file, json_data.encode('utf-8'))
 
     except Exception as e:
         logger.error("File conversion failed: %s", e)

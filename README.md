@@ -1,35 +1,14 @@
 
-<p align="center">
-    <a href="https://www.repostatus.org/#active" target="_blank">
-        <img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed">
-    </a>
-    <a href="https://mypy-lang.org/" target="_blank">
-        <img src="https://www.mypy-lang.org/static/mypy_badge.svg" alt="Mypy checked">
-    </a>
-    <a href="https://pypi.org/project/batchee/" target="_blank">
-        <img src="https://img.shields.io/pypi/pyversions/batchee.svg" alt="Python Versions">
-    </a>
-    <a href="https://pypi.org/project/batchee" target="_blank">
-        <img src="https://img.shields.io/pypi/v/batchee?color=%2334D058&label=pypi%20package" alt="Package version">
-    </a>
-    <a href="https://codecov.io/gh/nasa/batchee">
-     <img src="https://codecov.io/gh/nasa/batchee/graph/badge.svg?token=WDj92iN7c4" alt="Code coverage">
-    </a>
-</p>
-
-
 
 # Overview
 
 **CASPER** – CSV Automation Service for Processing & Easy Retrieval
 
-Casper is a Python package that converts NetCDF (.nc, .h5) files to one of more CSV files. The number of output
-files will be based on the dimensions found in the NetCDF file.
+CASPER is a Python package that converts NetCDF (.nc, .h5) files to one of more CSV files. The number of output files will be based on the dimensions found in the NetCDF file.
 
 ### What does it do?
 
-Casper gets the dimensions identified in the NetCDF file and groups variables by the dimensional schema, then outputs
-each dimensional schema in a separate CSV file.
+Using xarray, CASPER the dimensions identified in the NetCDF file and groups variables by the dimensional schema, then outputs each dimensional schema in a separate CSV file.
 
 # Getting started, with poetry
 
