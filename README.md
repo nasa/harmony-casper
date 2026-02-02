@@ -4,11 +4,11 @@
 
 **CASPER** – CSV Automation Service for Processing & Easy Retrieval
 
-CASPER is a Python package that converts NetCDF (.nc, .h5) files to one of more CSV files. The number of output files will be based on the dimensions found in the NetCDF file.
+CASPER is a Python package that converts NetCDF (.nc, .h5) files to one or more CSV files based on the dimensional schema in the NetCDF file.
 
 ### What does it do?
 
-Using xarray, CASPER the dimensions identified in the NetCDF file and groups variables by the dimensional schema, then outputs each dimensional schema in a separate CSV file.
+Using xarray, CASPER obtains the dimensions identified in the NetCDF file and groups variables by the dimensional schema, then outputs each dimensional schema in a separate CSV file.
 
 # Getting started, with poetry
 
@@ -92,5 +92,5 @@ Issues and pull requests welcome on [GitHub](https://github.com/nasa/casper/).
 
 ## License & Attribution
 
-Casper is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+CASPER is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
