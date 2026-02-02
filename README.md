@@ -88,7 +88,7 @@ poetry run casper filename
 
 ## Contributing
 
-Issues and pull requests welcome on [GitHub](https://github.com/nasa/casper/).
+Issues and pull requests welcome on [GitHub](https://github.com/nasa/harmony-casper/).
 
 ## License & Attribution
 
