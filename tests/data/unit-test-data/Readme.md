@@ -1,0 +1,183 @@
+# 2 CSV files created for TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4 based on dimensional schemas
+
+
+## TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-0.csv
+	dimensions:  latitude, longitude
+	non-dimension coordinates:
+	1 variables:
+		/weight
+
+## TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-1.csv
+	dimensions:  time, latitude, longitude
+	non-dimension coordinates:
+	20 variables:
+		/product/vertical_column
+		/product/vertical_column_uncertainty
+		/product/main_data_quality_flag
+		/qa_statistics/num_vertical_column_samples
+		/qa_statistics/min_vertical_column_sample
+		/qa_statistics/max_vertical_column_sample
+		/geolocation/solar_zenith_angle
+		/geolocation/viewing_zenith_angle
+		/geolocation/relative_azimuth_angle
+		/support_data/surface_pressure
+		/support_data/amf_cloud_pressure
+		/support_data/amf
+		/support_data/terrain_height
+		/support_data/fitted_slant_column_uncertainty
+		/support_data/fitted_slant_column
+		/support_data/amf_cloud_fraction
+		/support_data/snow_ice_fraction
+		/support_data/albedo
+		/support_data/eff_cloud_fraction
+		/support_data/pbl_height
+
+
+# TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4 Global Attributes:
+		Conventions: CF-1.6, ACDD-1.3
+		begin_date: 2025-09-12
+		begin_time: 21:04:35
+		build_dmrpp_metadata.bes: 3.21.1-367
+		build_dmrpp_metadata.build_dmrpp: 3.21.1-367
+		build_dmrpp_metadata.created: 2025-09-13T05:03:21Z
+		build_dmrpp_metadata.invocation: build_dmrpp -f /tmp/tmpwxlhm5rk/TEMPO_HCHO_L3_V04_20250912T210435Z_S012.nc -r TEMPO_HCHO_L3_V04_20250912T210435Z_S012.nc.dmr -u OPeNDAP_DMRpp_DATA_ACCESS_URL -M
+		build_dmrpp_metadata.libdap: libdap-3.21.1-99
+		collection_shortname: TEMPO_HCHO_L3
+		collection_version: 1
+		coremetadata: GROUP                  = INVENTORYMETADATA
+		  GROUPTYPE            = MASTERGROUP
+		  GROUP                  = ECSDATAGRANULE
+		    OBJECT                 = LOCALGRANULEID
+		      NUM_VAL              = 1
+		      VALUE                = "TEMPO_HCHO_L3_V04_20250912T210435Z_S012.nc"
+		    END_OBJECT             = LOCALGRANULEID
+		    OBJECT                 = LOCALVERSIONID
+		      NUM_VAL              = 1
+		      VALUE                = ("RFC1321 MD5 = not yet calculated")
+		    END_OBJECT             = LOCALVERSIONID
+		    OBJECT                 = PRODUCTIONDATETIME
+		      NUM_VAL              = 1
+		      VALUE                = "2025-09-13T04:49:57Z"
+		    END_OBJECT             = PRODUCTIONDATETIME
+		  END_GROUP              = ECSDATAGRANULE
+		  GROUP                  = COLLECTIONDESCRIPTIONCLASS
+		    OBJECT                 = SHORTNAME
+		      NUM_VAL              = 1
+		      VALUE                = "TEMPO_HCHO_L3"
+		    END_OBJECT             = SHORTNAME
+		    OBJECT                 = VERSIONID
+		      NUM_VAL              = 1
+		      VALUE                = 4
+		    END_OBJECT             = VERSIONID
+		  END_GROUP              = COLLECTIONDESCRIPTIONCLASS
+		  GROUP                  = INPUTGRANULE
+		    OBJECT                 = INPUTPOINTER
+		      NUM_VAL              = 9
+		      VALUE                = ("TEMPO_HCHO_L2_V04_20250912T210435Z_S012G01.nc", "TEMPO_HCHO_L2_V04_20250912T211115Z_S012G02.nc", "TEMPO_HCHO_L2_V04_20250912T211755Z_S012G03.nc", "TEMPO_HCHO_L2_V04_20250912T212433Z_S012G04.nc", "TEMPO_HCHO_L2_V04_20250912T213110Z_S012G05.nc", "TEMPO_HCHO_L2_V04_20250912T213747Z_S012G06.nc", "TEMPO_HCHO_L2_V04_20250912T214425Z_S012G07.nc", "TEMPO_HCHO_L2_V04_20250912T215102Z_S012G08.nc", "TEMPO_HCHO_L2_V04_20250912T215739Z_S012G09.nc")
+		    END_OBJECT             = INPUTPOINTER
+		  END_GROUP              = INPUTGRANULE
+		  GROUP                  = SPATIALDOMAINCONTAINER
+		    GROUP                  = HORIZONTALSPATIALDOMAINCONTAINER
+		      GROUP                  = GPOLYGON
+		        OBJECT                 = GPOLYGONCONTAINER
+		          CLASS                = "1"
+		          GROUP                  = GRINGPOINT
+		            CLASS                = "1"
+		            OBJECT                 = GRINGPOINTLONGITUDE
+		              NUM_VAL              = 96
+		              CLASS                = "1"
+		              VALUE                = (-164.06, -163.4, -163.28, -158.5, -153.84, -150.32, -146.56, -143.12, -139.78, -136.76, -133.9, -131.38, -129.02, -127, -125.4, -123.76, -122.4, -121.18, -120.16, -110.34, -96.78, -79.54, -65.10001, -64.36, -63.18, -61.9, -60.38, -58.66, -56.98, -54.94, -52.86, -50.06001, -46.56001, -42.9, -39.32001, -35.06, -30.38, -25.84, -21.04001, -20.98, -20.62001, -20.58, -20, -20, -20.08, -20.34, -20.36, -20.66, -20.68001, -21.06, -21.08, -21.2, -21.22, -21.62001, -21.64, -23.56, -24.2, -32.90001, -44.10001, -54.2, -63.54, -70.96, -79.14, -86.3, -94.14, -101, -109.2, -117.52, -124.78, -135.44, -139.46, -139.6, -140.1, -140.22, -140.62, -140.72, -141.2, -142.38, -143.04, -149.82, -160.24, -160.38, -160.94, -160.96, -161.26, -161.28, -161.7, -161.72, -162.32, -162.34, -163.16, -163.18, -163.3, -163.32, -164.06, -164.06)
+		            END_OBJECT             = GRINGPOINTLONGITUDE
+		            OBJECT                 = GRINGPOINTLATITUDE
+		              NUM_VAL              = 96
+		              CLASS                = "1"
+		              VALUE                = (57.26, 56.98, 56.84, 55.98, 54.8, 53.66, 52.16, 50.48, 48.5, 46.34, 43.88, 41.28, 38.36, 35.36, 32.54, 29.08, 25.58, 21.68, 17.54, 17.34, 17.2, 17.24, 17.46, 20.86, 25.22, 29.02, 32.72, 36.18, 39.02, 41.94, 44.46, 47.3, 50.18, 52.6, 54.52, 56.36, 57.94, 59.12, 60.04, 60.12, 60.16, 60.24, 60.32, 60.96, 61.22, 61.2, 61.58, 61.54, 61.64, 61.6, 61.7, 61.68, 63.26, 63.2, 63.7, 63.46, 63.46, 62.22, 60.74, 59.6, 58.72, 58.2, 57.8, 57.62, 57.6, 57.74, 58.1, 58.66, 59.3, 60.44, 60.98, 60.94, 61.06, 61, 61.12, 61.08, 61.2, 61.3, 61.44, 62.32, 63.8, 62.94, 63.02, 62.02, 62.06, 61.96, 62, 61.12, 61.2, 60.3, 60.4, 58.82, 58.82, 58.32, 58.42, 57.26)
+		            END_OBJECT             = GRINGPOINTLATITUDE
+		            OBJECT                 = GRINGPOINTSEQUENCENO
+		              NUM_VAL              = 96
+		              CLASS                = "1"
+		              VALUE                = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96)
+		            END_OBJECT             = GRINGPOINTSEQUENCENO
+		          END_GROUP              = GRINGPOINT
+		          GROUP                  = GRING
+		            CLASS                = "1"
+		            OBJECT                 = EXCLUSIONGRINGFLAG
+		              NUM_VAL              = 1
+		              VALUE                = "N"
+		              CLASS                = "1"
+		            END_OBJECT             = EXCLUSIONGRINGFLAG
+		          END_GROUP              = GRING
+		        END_OBJECT             = GPOLYGONCONTAINER
+		      END_GROUP              = GPOLYGON
+		    END_GROUP              = HORIZONTALSPATIALDOMAINCONTAINER
+		  END_GROUP              = SPATIALDOMAINCONTAINER
+		  GROUP                  = RANGEDATETIME
+		    OBJECT                 = RANGEENDINGDATE
+		      NUM_VAL              = 1
+		      VALUE                = "2025-09-12"
+		    END_OBJECT             = RANGEENDINGDATE
+		    OBJECT                 = RANGEENDINGTIME
+		      NUM_VAL              = 1
+		      VALUE                = "22:04:16"
+		    END_OBJECT             = RANGEENDINGTIME
+		    OBJECT                 = RANGEBEGINNINGDATE
+		      NUM_VAL              = 1
+		      VALUE                = "2025-09-12"
+		    END_OBJECT             = RANGEBEGINNINGDATE
+		    OBJECT                 = RANGEBEGINNINGTIME
+		      NUM_VAL              = 1
+		      VALUE                = "21:04:35"
+		    END_OBJECT             = RANGEBEGINNINGTIME
+		  END_GROUP              = RANGEDATETIME
+		  GROUP                  = PGEVERSIONCLASS
+		    OBJECT                 = PGEVERSION
+		      NUM_VAL              = 1
+		      VALUE                = "1.0.0"
+		    END_OBJECT             = PGEVERSION
+		  END_GROUP              = PGEVERSIONCLASS
+		END_GROUP              = INVENTORYMETADATA
+		END
+		creator_url: http://tempo.si.edu
+		day_of_year: 255
+		end_date: 2025-09-12
+		end_time: 22:04:16
+		geospatial_bounds: POLYGON((57.2600 -164.0600,56.9800 -163.4000,56.8400 -163.2800,55.9800 -158.5000,54.8000 -153.8400,53.6600 -150.3200,52.1600 -146.5600,50.4800 -143.1200,48.5000 -139.7800,46.3400 -136.7600,43.8800 -133.9000,41.2800 -131.3800,38.3600 -129.0200,35.3600 -127.0000,32.5400 -125.4000,29.0800 -123.7600,25.5800 -122.4000,21.6800 -121.1800,17.5400 -120.1600,17.3400 -110.3400,17.2000 -96.7800,17.2400 -79.5400,17.4600 -65.1000,20.8600 -64.3600,25.2200 -63.1800,29.0200 -61.9000,32.7200 -60.3800,36.1800 -58.6600,39.0200 -56.9800,41.9400 -54.9400,44.4600 -52.8600,47.3000 -50.0600,50.1800 -46.5600,52.6000 -42.9000,54.5200 -39.3200,56.3600 -35.0600,57.9400 -30.3800,59.1200 -25.8400,60.0400 -21.0400,60.1200 -20.9800,60.1600 -20.6200,60.2400 -20.5800,60.3200 -20.0000,60.9600 -20.0000,61.2200 -20.0800,61.2000 -20.3400,61.5800 -20.3600,61.5400 -20.6600,61.6400 -20.6800,61.6000 -21.0600,61.7000 -21.0800,61.6800 -21.2000,63.2600 -21.2200,63.2000 -21.6200,63.7000 -21.6400,63.4600 -23.5600,63.4600 -24.2000,62.2200 -32.9000,60.7400 -44.1000,59.6000 -54.2000,58.7200 -63.5400,58.2000 -70.9600,57.8000 -79.1400,57.6200 -86.3000,57.6000 -94.1400,57.7400 -101.0000,58.1000 -109.2000,58.6600 -117.5200,59.3000 -124.7800,60.4400 -135.4400,60.9800 -139.4600,60.9400 -139.6000,61.0600 -140.1000,61.0000 -140.2200,61.1200 -140.6200,61.0800 -140.7200,61.2000 -141.2000,61.3000 -142.3800,61.4400 -143.0400,62.3200 -149.8200,63.8000 -160.2400,62.9400 -160.3800,63.0200 -160.9400,62.0200 -160.9600,62.0600 -161.2600,61.9600 -161.2800,62.0000 -161.7000,61.1200 -161.7200,61.2000 -162.3200,60.3000 -162.3400,60.4000 -163.1600,58.8200 -163.1800,58.8200 -163.3000,58.3200 -163.3200,58.4200 -164.0600,57.2600 -164.0600))
+		geospatial_bounds_crs: EPSG:4326
+		geospatial_lat_max: 63.8
+		geospatial_lat_min: 17.2
+		geospatial_lon_max: -20.0
+		geospatial_lon_min: -164.06
+		history: 2025-09-13T04:49:57Z: L2_regrid -v /proj/sdpc/liveroot/temposdpc/v4p7p0_live_test/etc/l3.cfg
+		2026-02-04 18:02:54 GMT hyrax-1.17.1-560 https://opendap.uat.earthdata.nasa.gov/collections/C1274178317-LARC_CLOUD/granules/TEMPO_HCHO_L3_V04_20250912T210435Z_S012.nc.dap.nc4?A-api-request-uuid=f4e028ce-d854-475d-bd9f-62f10b249db4,dap4.ce=%2Fgeolocation%2Fsolar_zenith_angle%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fproduct%2Fvertical_column%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fgeolocation%2Fviewing_zenith_angle%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Fpbl_height%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Fsurface_pressure%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fqa_statistics%2Fmin_vertical_column_sample%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fproduct%2Fmain_data_quality_flag%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Famf%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fweight%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fproduct%2Fvertical_column_uncertainty%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Famf_cloud_pressure%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fqa_statistics%2Fnum_vertical_column_samples%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Fterrain_height%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fgeolocation%2Frelative_azimuth_angle%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Ffitted_slant_column%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Flatitude%5B1360%3A1387%5D%3B%2Ftime%3B%2Fsupport_data%2Fsnow_ice_fraction%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Famf_cloud_fraction%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fqa_statistics%2Fmax_vertical_column_sample%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Flongitude%5B4061%3A4167%5D%3B%2Fsupport_data%2Ffitted_slant_column_uncertainty%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Feff_cloud_fraction%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Falbedo%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D
+		history_json: [{"$schema":"https:\/\/harmony.earthdata.nasa.gov\/schemas\/history\/0.1.0\/history-0.1.0.json","date_time":"2026-02-04T18:02:54.084+0000","program":"hyrax","version":"1.17.1-560","parameters":[{"request_url":"https:\/\/opendap.uat.earthdata.nasa.gov\/collections\/C1274178317-LARC_CLOUD\/granules\/TEMPO_HCHO_L3_V04_20250912T210435Z_S012.nc.dap.nc4?A-api-request-uuid=f4e028ce-d854-475d-bd9f-62f10b249db4,dap4.ce=%2Fgeolocation%2Fsolar_zenith_angle%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fproduct%2Fvertical_column%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fgeolocation%2Fviewing_zenith_angle%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Fpbl_height%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Fsurface_pressure%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fqa_statistics%2Fmin_vertical_column_sample%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fproduct%2Fmain_data_quality_flag%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Famf%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fweight%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fproduct%2Fvertical_column_uncertainty%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Famf_cloud_pressure%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fqa_statistics%2Fnum_vertical_column_samples%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Fterrain_height%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fgeolocation%2Frelative_azimuth_angle%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Ffitted_slant_column%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Flatitude%5B1360%3A1387%5D%3B%2Ftime%3B%2Fsupport_data%2Fsnow_ice_fraction%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Famf_cloud_fraction%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fqa_statistics%2Fmax_vertical_column_sample%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Flongitude%5B4061%3A4167%5D%3B%2Fsupport_data%2Ffitted_slant_column_uncertainty%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Feff_cloud_fraction%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D%3B%2Fsupport_data%2Falbedo%5B%5D%5B1360%3A1387%5D%5B4061%3A4167%5D"},{"decoded_constraint":"A-api-request-uuid=f4e028ce-d854-475d-bd9f-62f10b249db4,dap4.ce=\/geolocation\/solar_zenith_angle[][1360:1387][4061:4167];\/product\/vertical_column[][1360:1387][4061:4167];\/geolocation\/viewing_zenith_angle[][1360:1387][4061:4167];\/support_data\/pbl_height[][1360:1387][4061:4167];\/support_data\/surface_pressure[][1360:1387][4061:4167];\/qa_statistics\/min_vertical_column_sample[][1360:1387][4061:4167];\/product\/main_data_quality_flag[][1360:1387][4061:4167];\/support_data\/amf[][1360:1387][4061:4167];\/weight[1360:1387][4061:4167];\/product\/vertical_column_uncertainty[][1360:1387][4061:4167];\/support_data\/amf_cloud_pressure[][1360:1387][4061:4167];\/qa_statistics\/num_vertical_column_samples[][1360:1387][4061:4167];\/support_data\/terrain_height[][1360:1387][4061:4167];\/geolocation\/relative_azimuth_angle[][1360:1387][4061:4167];\/support_data\/fitted_slant_column[][1360:1387][4061:4167];\/latitude[1360:1387];\/time;\/support_data\/snow_ice_fraction[][1360:1387][4061:4167];\/support_data\/amf_cloud_fraction[][1360:1387][4061:4167];\/qa_statistics\/max_vertical_column_sample[][1360:1387][4061:4167];\/longitude[4061:4167];\/support_data\/fitted_slant_column_uncertainty[][1360:1387][4061:4167];\/support_data\/eff_cloud_fraction[][1360:1387][4061:4167];\/support_data\/albedo[][1360:1387][4061:4167]"}]}]
+		input_files: TEMPO_HCHO_L2_V04_20250912T210435Z_S012G01.nc
+		TEMPO_HCHO_L2_V04_20250912T211115Z_S012G02.nc
+		TEMPO_HCHO_L2_V04_20250912T211755Z_S012G03.nc
+		TEMPO_HCHO_L2_V04_20250912T212433Z_S012G04.nc
+		TEMPO_HCHO_L2_V04_20250912T213110Z_S012G05.nc
+		TEMPO_HCHO_L2_V04_20250912T213747Z_S012G06.nc
+		TEMPO_HCHO_L2_V04_20250912T214425Z_S012G07.nc
+		TEMPO_HCHO_L2_V04_20250912T215102Z_S012G08.nc
+		TEMPO_HCHO_L2_V04_20250912T215739Z_S012G09.nc
+		institution: Smithsonian Astrophysical Observatory
+		keywords: EARTH SCIENCE>ATMOSPHERE>AIR QUALITY>VOLATILE ORGANIC COMPOUNDS, EARTH SCIENCE>ATMOSPHERE>ATMOSPHERIC CHEMISTRY>CARBON AND HYDROCARBON COMPOUNDS>FORMALDEHYDE
+		local_granule_id: TEMPO_HCHO_L3_V04_20250912T210435Z_S012.nc
+		pge_version: 1.0.0
+		platform: Intelsat 40e
+		processing_level: 3
+		processing_version: 4
+		product_type: HCHO
+		production_date_time: 2025-09-13T04:49:57Z
+		project: TEMPO
+		scan_num: 12
+		sdpc_version: TEMPO_SDPC_v4.6.1-137-g313be99e
+		shortname: TEMPO_HCHO_L3
+		source: UV-VIS hyperspectral imaging
+		summary: Formaldehyde Level 3 files provide trace gas information on a regular grid covering the TEMPO field of regard for nominal TEMPO observations. Level 3 files are derived by combining information from all Level 2 files constituting a TEMPO East-West scan cycle. The files are provided in netCDF4 format, and contain information on formaldehyde vertical columns, ancillary data used in air mass factor calculations and reference sector or de-striping corrections, and retrieval quality flags. The re-gridding algorithm uses an area-weighted approach.
+		time_coverage_end: 2025-09-12T22:04:16Z
+		time_coverage_end_since_epoch: 1441749874.6481714
+		time_coverage_start: 2025-09-12T21:04:35Z
+		time_coverage_start_since_epoch: 1441746293.0220175
+		time_reference: 1980-01-06T00:00:00Z
+		title: TEMPO Level 3 formaldehyde product
+		version_id: 4

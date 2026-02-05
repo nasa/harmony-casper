@@ -15,19 +15,28 @@ def remove_blank_lines(text):
     return "\n\t\t".join(real_lines) 
 
 def get_group_attributes(ds): 
+    """Get group global attributes"""
     group_attrs = ''
     for node in ds.subtree:
         if node.path != '/' and len(node.attrs) > 0:
             group_attrs += f'\n# Group {node.path} Attributes:\n\t'
-            foo = {k:str(v) for k,v in node.attrs.items()}
-            foo = dict(sorted(foo.items()))
-            f_attrs = [f'\t{k}: {remove_blank_lines(v)}' for k,v in foo.items()]
+            attrs_dict = {k:str(v) for k,v in node.attrs.items()}
+            attrs_dict = dict(sorted(attrs_dict.items()))
+            f_attrs = [f'\t{k}: {remove_blank_lines(v)}' for k,v in attrs_dict.items()]
             group_attrs += "\n\t".join(f_attrs)
     return group_attrs
 
-def create_markdown(md, ds, input_filename):
-    header = f"# {len(md)} CSV files created for {input_filename} based on dimensional schemas\n\n"
+def get_global_attributes(ds):
+    """Get dataset global attributes"""
     attrs = ds.attrs
+    attrs_dict = {k:str(v) for k,v in attrs.items()}
+    attrs_dict = dict(sorted(attrs_dict.items()))
+    attrs_list = [f'\t{k}: {remove_blank_lines(v)}' for k,v in attrs_dict.items()]
+    return attrs_list
+
+def create_markdown(md, ds, input_filename):
+    """Create markdown file contents"""
+    header = f"# {len(md)} CSV files created for {input_filename} based on dimensional schemas\n\n"
     data = ""
     for k,v in md.items():
         data += f"## {v['filename']}\n"
@@ -42,23 +51,21 @@ def create_markdown(md, ds, input_filename):
         if len(v["vrbs"]) > 0:
             data += f"\t\t{'\n\t\t'.join(v["vrbs"])}\n\n"
  
-    foo = {k:str(v) for k,v in attrs.items()}
-    foo = dict(sorted(foo.items()))
-    f_attrs = [f'\t{k}: {remove_blank_lines(v)}' for k,v in foo.items()]
+    global_attrs = get_global_attributes(ds)
     a_val = f"# {input_filename} Global Attributes:\n\t"
-    a_val += "\n\t".join(f_attrs)
+    a_val += "\n\t".join(global_attrs)
     group_attrs = get_group_attributes(ds)
     content = f"""{header}\n{data}\n{a_val}\n{group_attrs}"""
     return content
 
 def json_readme(ds, input_filename, json_obj):
     attrs = ds.attrs
-    foo = {k: str(v) for k,v in attrs.items()}
-    json_obj[f'{input_filename} Global Attributes:'] = dict(sorted(foo.items()))
+    attrs_dict = {k: str(v) for k,v in attrs.items()}
+    json_obj[f'{input_filename} Global Attributes:'] = dict(sorted(attrs_dict.items()))
     for node in ds.subtree:
         if node.path != '/' and len(node.attrs) > 0:
-            foo = {k: str(v) for k,v in node.attrs.items()}
-            json_obj[f'Group {node.path} Attributes:'] = dict(sorted(foo.items()))
+            node_attrs = {k: str(v) for k,v in node.attrs.items()}
+            json_obj[f'Group {node.path} Attributes:'] = dict(sorted(node_attrs.items()))
     return
 
 def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) -> int:
@@ -70,6 +77,15 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
     ----------
     fname: str
         The name of the NetCDF file to be converted to CSV file(s)
+    zip_file: str
+        The name of the zipfile to create
+    logger: Logger
+        Logger instance for output messages
+    
+    Returns
+    -------
+    int
+        Number of CSV files created
     """
     xr.set_options(use_new_combine_kwarg_defaults=True)
     num_csv_files = 0
