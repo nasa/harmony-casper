@@ -133,24 +133,24 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
                                         'variables': vvs
                                         }
 
-                    chunk_size = 100
+                    chunk_size = 10
                     data_len = 0
-                    for x in ds.sizes.keys():
-                        if len(ds[f'{x}']) > data_len:
-                            data_len = len(ds[f'{x}'])
-                            dim_var = x
+                    prime_dim = next(iter( ds.sizes.items() ))
+                    dim_var = prime_dim[0]
+                    data_len = prime_dim[1]
                     for i in range(0, data_len, chunk_size):
                         # Process a slice of the dataset
                         indexer = {dim_var: slice(i, i + chunk_size)}
                         ds_chunk = ds.isel(indexer)
-
+                        chunk = ds_chunk.compute()
                         # Convert the small chunk to a pandas DataFrame
-                        df_chunk = ds_chunk.to_dataframe().dropna(how='all', subset=vvs)
+                        df_chunk = chunk.to_dataframe().dropna(how='all', subset=vvs)
                         
                         # Write header for the first chunk only
                         df_chunk.to_csv(csv_file, header=(i==0))
 
                         del df_chunk
+
                 logger.info(f' {op_file} added to zip file')
                 num_csv_files += 1
 
