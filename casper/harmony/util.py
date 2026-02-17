@@ -27,6 +27,7 @@
 """Misc utility functions"""
 
 from datetime import datetime
+
 from pystac import Asset, Item
 
 VALID_EXTENSIONS = (".nc4", ".nc")
