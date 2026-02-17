@@ -33,12 +33,12 @@ from tempfile import TemporaryDirectory
 from urllib.parse import urlsplit
 from uuid import uuid4
 
+from harmony_service_lib.adapter import BaseHarmonyAdapter
+from harmony_service_lib.util import stage
+
 from casper.convert_to_csv import convert_to_csv
 from casper.harmony.download_worker import download_file
 from casper.harmony.util import _get_item_url, _get_output_date_range
-
-from harmony_service_lib.adapter import BaseHarmonyAdapter
-from harmony_service_lib.util import stage
 
 class CasperAdapter(BaseHarmonyAdapter):
     """

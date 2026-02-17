@@ -13,9 +13,9 @@ default_logger = logging.getLogger(__name__)
 def remove_blank_lines(text):
     lines = text.splitlines()  # Split the string into a list of lines
     real_lines = [line for line in lines if line.strip()]  # Filter out blank lines
-    return "\n\t\t".join(real_lines) 
+    return "\n\t\t".join(real_lines)
 
-def get_group_attributes(ds): 
+def get_group_attributes(ds):
     """Get group global attributes"""
     group_attrs = ''
     for node in ds.subtree:
