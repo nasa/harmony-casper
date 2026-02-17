@@ -13,7 +13,7 @@ license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.12,<4"
 authors = [
-    { name = "Kim Cunnningham", email = "kim.cunningham@nasa.gov" }
+    { name = "Kim Cunnningham", email = "kimberly.cunningham@nasa.gov" }
 ]
 dependencies = [
     "netcdf4>=1.6.5",
@@ -24,10 +24,10 @@ dependencies = [
     "harmony-service-lib>=2.0.0"]
 
 [project.urls]
-Repository = "https://github.com/nasa/casper"
+Repository = "https://github.com/nasa/harmony-casper"
 Documentation = "https://casper.readthedocs.io"
-Changelog = "https://github.com/nasa/casper/blob/main/CHANGELOG.md"
-"Bug Tracker" = "https://github.com/nasa/casper/issues"
+Changelog = "https://github.com/nasa/harmony-casper/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/nasa/harmony-casper/issues"
 
 [project.scripts]
 casper_harmony = 'casper.harmony.cli:main'
