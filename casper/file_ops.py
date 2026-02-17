@@ -34,7 +34,7 @@ def valid_workable_file(filename: str, logger: Logger = module_logger) -> bool:
     except Exception as e:
         logger.debug("Error opening %s as netCDF: %s", filename, e)
         return False
-    
+
 def valid_input_file(filename: str) -> bool:
     """
     Verify valid filename specified

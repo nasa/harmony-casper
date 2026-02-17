@@ -32,7 +32,6 @@ from pystac import Asset, Item
 VALID_EXTENSIONS = (".nc4", ".nc")
 VALID_MEDIA_TYPES = ["application/x-netcdf", "application/x-netcdf4"]
 
-
 def _is_netcdf_asset(asset: Asset) -> bool:
     """Check that a `pystac.Asset` is a valid NetCDF-4 granule. This can be
     ascertained via either the media type or by checking the extension of

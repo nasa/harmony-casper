@@ -1,10 +1,10 @@
 
 """A Harmony CLI wrapper around casper"""
 
-import logging
-import sys
 from casper.file_ops import valid_input_file, valid_workable_file
 from casper.convert_to_csv import convert_to_csv
+import logging
+import sys
 
 def run_casper(input_file: str):
     """Parse arguments and run casper on specified input file."""
