@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-import xarray as xr
-import sys
+import json
 import logging
 from logging import Logger
+import sys
+import xarray as xr
 import zipfile
-import json
+
 from casper.file_ops import valid_input_file, valid_workable_file
 
 default_logger = logging.getLogger(__name__)
@@ -40,17 +41,17 @@ def create_markdown(md, ds, input_filename):
     data = ""
     for k,v in md.items():
         data += f"## {v['filename']}\n"
-        data += f"\tdimensions:"
+        data += "\tdimensions:"
         if len(k) > 0:
             data += f"  {', '.join(k)}"
-        data += f"\n\tnon-dimension coordinates:"
+        data += "\n\tnon-dimension coordinates:"
         coords = [c for c in v['coords'] if c not in v['keys']]
         if len(coords) > 0:
             data += f"  {', '.join(coords)}"
         data += f"\n\t{len(v["vrbs"])} variables:\n"
         if len(v["vrbs"]) > 0:
             data += f"\t\t{'\n\t\t'.join(v["vrbs"])}\n\n"
- 
+
     global_attrs = get_global_attributes(ds)
     a_val = f"# {input_filename} Global Attributes:\n\t"
     a_val += "\n\t".join(global_attrs)
@@ -81,7 +82,7 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
         The name of the zipfile to create
     logger: Logger
         Logger instance for output messages
-    
+
     Returns
     -------
     int
@@ -97,10 +98,10 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
     try:
         # Open file as xarray datatree
         data = xr.open_datatree(fname)
-        
+
         # Loops datatree items to gather info for various dimension groups
         for path,ds in data.to_dict().items():
-            if path=="/": 
+            if path=="/":
                 path=""
             variables = list(ds.variables)
             products = [f"{path}/{vv}" for vv in variables if vv not in ds.coords]
@@ -125,7 +126,7 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
                     # Order columns: dimensions, non-dimensional coordinates, rest of variables
                     cols = list(dims) + list(ds.coords) + vvs
                     ds = ds[cols]
-                
+
                     # Add info to markdown and json dictionaries for creation of Readmes
                     md[dims] = {'filename': op_file, 'keys': dims, 'coords': list(ds.coords), 'vrbs': vvs}
                     json_obj[op_file] = {'dimensions': ','.join(list(dims)),
@@ -145,7 +146,7 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
                         chunk = ds_chunk.compute()
                         # Convert the small chunk to a pandas DataFrame
                         df_chunk = chunk.to_dataframe().dropna(how='all', subset=vvs)
-                        
+
                         # Write header for the first chunk only
                         df_chunk.to_csv(csv_file, header=(i==0))
 
@@ -154,12 +155,12 @@ def convert_to_csv(fname:str, zip_file: str, logger: Logger = default_logger) ->
                 logger.info(f' {op_file} added to zip file')
                 num_csv_files += 1
 
-            # Create markdown and json Readme files 
+            # Create markdown and json Readme files
             readme_contents = create_markdown(md, data, input_filename)
             readme_file = 'Readme.md'
             with zf.open(readme_file, 'w') as file:
                 file.write(readme_contents.encode('utf-8'))
-                
+
             # Create JSON file with pretty printing
             json_readme(data,input_filename,json_obj)
             json_file = "Readme.json"
@@ -180,11 +181,11 @@ def main():
         level=logging.INFO,
     )
     if len(sys.argv) < 2:
-        print(f"Must specify an input file")
+        print("Must specify an input file")
         exit()
 
     input_file = sys.argv[1]
-    
+
     """Parse arguments and run casper on specified input file."""
     if not valid_input_file(input_file):
             raise ValueError("Input filename not valid")
@@ -194,6 +195,6 @@ def main():
     zip_file_name = f"{input_file.split('/')[-1].split('.')[0]}.zip"
 
     convert_to_csv(input_file, zip_file_name)
-    
+
 if __name__ == "__main__":
     main()
