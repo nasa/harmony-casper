@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 import json
 import logging
-from logging import Logger
 import sys
 import xarray as xr
 import zipfile
 
-from casper.file_ops import valid_input_file, valid_workable_file
+from logging import Logger
+
+from casper.file_ops import (
+    valid_input_file, 
+    valid_workable_file,
+)
 
 default_logger = logging.getLogger(__name__)
 
