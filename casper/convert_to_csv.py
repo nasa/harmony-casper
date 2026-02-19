@@ -2,10 +2,10 @@
 import json
 import logging
 import sys
-import xarray as xr
 import zipfile
-
 from logging import Logger
+
+import xarray as xr
 
 from casper.file_ops import (
     valid_input_file,

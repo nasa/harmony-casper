@@ -1,16 +1,15 @@
 import logging
 from os import listdir
 from pathlib import Path
-import pytest
-from zipfile import ZipFile
 from tempfile import TemporaryDirectory
+from zipfile import ZipFile
+
 from casper.convert_to_csv import (
     convert_to_csv,
 )
 
 from .. import data_for_tests_dir
-from ..conftest import path_str
- 
+
 module_logger = logging.getLogger(__name__)
 
 def test_coversion():
@@ -20,7 +19,7 @@ def test_coversion():
     test_data_dir = str(
         data_for_tests_dir / "unit-test-data/"
     )
- 
+
     with TemporaryDirectory() as temp_dir:
         zip_file_name = fname.split('/')[-1].split('.')[0]
 

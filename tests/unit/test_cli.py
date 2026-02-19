@@ -1,10 +1,12 @@
+import os
 import sys
-from unittest.mock import patch
-import pytest
-import casper.cli
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
+
+import casper.cli
+
 from .. import data_for_tests_dir
-from os import remove
+
 
 def test_cli():
     fname = str(
@@ -16,8 +18,6 @@ def test_cli():
         fname,
     ]
 
-    f = 'TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.zip'
-    with TemporaryDirectory() as temp_dir:
-        with patch.object(sys, "argv", test_args):
-            casper.cli.main()
-    remove(f)
+    with TemporaryDirectory() as temp_dir, patch.object(sys, "argv", test_args):
+        os.chdir(temp_dir)
+        casper.cli.main()
