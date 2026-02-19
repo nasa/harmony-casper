@@ -8,7 +8,7 @@ import zipfile
 from logging import Logger
 
 from casper.file_ops import (
-    valid_input_file, 
+    valid_input_file,
     valid_workable_file,
 )
 
