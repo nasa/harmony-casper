@@ -55,7 +55,7 @@ integration = [
 ]
 
 [tool.poetry]
-version = "1.8.0"
+version = "1.8.1a0"
 packages = [
     { include = "casper" },
 ]

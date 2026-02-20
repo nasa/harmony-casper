@@ -24,7 +24,7 @@ poetry install
 For example:
 
 ```shell
-poetry run casper TEMPO_NO2_L2_V04_S009G07.nc 
+poetry run casper TEMPO_NO2_L2_V04_S009G07.nc
 ```
 For example (_note that these are pseudo-real, not actual, TEMPO file names_):
 
@@ -93,4 +93,3 @@ Issues and pull requests welcome on [GitHub](https://github.com/nasa/harmony-cas
 ## License & Attribution
 
 CASPER is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-

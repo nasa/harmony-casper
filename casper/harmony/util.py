@@ -33,6 +33,7 @@ from pystac import Asset, Item
 VALID_EXTENSIONS = (".nc4", ".nc")
 VALID_MEDIA_TYPES = ["application/x-netcdf", "application/x-netcdf4"]
 
+
 def _is_netcdf_asset(asset: Asset) -> bool:
     """Check that a `pystac.Asset` is a valid NetCDF-4 granule. This can be
     ascertained via either the media type or by checking the extension of
@@ -58,6 +59,7 @@ def _get_item_url(item: Item) -> str | None:
         None,
     )
 
+
 def _get_output_date_range(input_items: list[Item]) -> dict[str, str]:
     """Create a dictionary of start and end datetime, which encompasses the
     full temporal range of all input `pystac.Item` instances. This output
@@ -77,6 +79,7 @@ def _get_output_date_range(input_items: list[Item]) -> dict[str, str]:
         "end_datetime": end_datetime.isoformat(),
     }
 
+
 def _get_item_date_range(item: Item) -> tuple[datetime, datetime]:
     """A helper function to retrieve the temporal range from a `pystac.Item`
     instance. If the `pystac.Item.datetime` property exists, there is a
@@ -93,6 +96,7 @@ def _get_item_date_range(item: Item) -> tuple[datetime, datetime]:
 
     return start_datetime, end_datetime
 
+
 def _get_netcdf_urls(items: list[Item]) -> list[str]:
     """Iterate through a list of `pystac.Item` instances, from the input
     `pystac.Catalog`. Extract the `pystac.Asset.href` for the first asset
@@ -106,4 +110,3 @@ def _get_netcdf_urls(items: list[Item]) -> list[str]:
         raise RuntimeError("Some input granules do not have NetCDF-4 assets.")
 
     return catalog_urls[0]  # type: ignore[return-value]
-

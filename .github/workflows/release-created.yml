@@ -1,8 +1,10 @@
-name: Release Branch Created
+name: Release Created
 
 # Run whenever a ref is created https://docs.github.com/en/actions/reference/events-that-trigger-workflows#create
 on:
-  create
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 env:
   POETRY_VERSION: "2.1.3"
