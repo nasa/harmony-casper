@@ -14,6 +14,7 @@ module_logger = logging.getLogger(__name__)
 # Module constants
 VALID_EXTENSIONS = [".h5", ".nc", ".nc4", ".netcdf"]
 
+
 def valid_workable_file(filename: str, logger: Logger = module_logger) -> bool:
     """
     Verify file is a valid non-empty netCDF files.
@@ -35,6 +36,7 @@ def valid_workable_file(filename: str, logger: Logger = module_logger) -> bool:
         logger.debug("Error opening %s as netCDF: %s", filename, e)
         return False
 
+
 def valid_input_file(filename: str) -> bool:
     """
     Verify valid filename specified
@@ -54,7 +56,7 @@ def valid_input_file(filename: str) -> bool:
     ValueError
         If filename not valid
     """
-    module_logger.debug("Validating input file: %s",filename)
+    module_logger.debug("Validating input file: %s", filename)
 
     if not filename:
         raise ValueError("No input file provided")
@@ -63,11 +65,11 @@ def valid_input_file(filename: str) -> bool:
     path = Path(filename).resolve()
 
     if path.is_dir():
-         raise ValueError("Input must be a single filename")
+        raise ValueError("Input must be a single filename")
 
     if path.is_file():
         if path.suffix.lower() in VALID_EXTENSIONS:
-            return str(path)
+            return True
         else:
             raise ValueError("Input file must be a netcdf file")
 
@@ -108,7 +110,8 @@ def _is_file_empty(dataset: nc.Dataset | nc.Group) -> bool:
         # Check if variable is non-empty using three different methods
         # Check 1: Are all values masked?
         if np.ma.isMaskedArray(var_data) and (
-                not var_data.mask.all() and not np.all(np.isnan(var_data.data))):
+            not var_data.mask.all() and not np.all(np.isnan(var_data.data))
+        ):
             return False  # Found a non-empty masked array
 
         # Check 2: Are all values equal to fill value?

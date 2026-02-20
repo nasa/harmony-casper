@@ -46,7 +46,8 @@ def main(config: harmony_service_lib.util.Config = None) -> None:
     None
     """
     parser = ArgumentParser(
-        prog="Casper", description="Run the CSV Automation Service for Processing & Easy Retrieval function"
+        prog="Casper",
+        description="Run the CSV Automation Service for Processing & Easy Retrieval function",
     )
     harmony_service_lib.setup_cli(parser)
     args = parser.parse_args()

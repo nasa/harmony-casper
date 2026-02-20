@@ -13,7 +13,7 @@ def download_file(
     destination_dir: str,
     access_token: str,
     cfg: dict,
-) -> None:
+) -> str:
     """
     A method to be executed in a separate process which processes the url_queue
     and places paths to completed downloads into the path_list. Downloads are
@@ -35,9 +35,7 @@ def download_file(
 
     logger = build_logger(cfg)
 
-    path = Path(
-        download(url, destination_dir, logger=logger, access_token=access_token, cfg=cfg)
-    )
+    path = Path(download(url, destination_dir, logger=logger, access_token=access_token, cfg=cfg))
     filename_match = re.match(r".*\/(.+\..+)", urlparse(url).path)
 
     if filename_match is not None:

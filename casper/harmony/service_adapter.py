@@ -26,8 +26,6 @@
 # limitations under the License.
 
 from pathlib import Path
-from pystac import Item, Catalog
-from pystac.item import Asset
 from shutil import copyfile
 from tempfile import TemporaryDirectory
 from urllib.parse import urlsplit
@@ -35,6 +33,8 @@ from uuid import uuid4
 
 from harmony_service_lib.adapter import BaseHarmonyAdapter
 from harmony_service_lib.util import stage
+from pystac import Catalog, Item
+from pystac.item import Asset
 
 from casper.convert_to_csv import convert_to_csv
 from casper.harmony.download_worker import download_file
@@ -42,6 +42,7 @@ from casper.harmony.util import (
     _get_item_url,
     _get_output_date_range,
 )
+
 
 class CasperAdapter(BaseHarmonyAdapter):
     """
@@ -95,28 +96,34 @@ class CasperAdapter(BaseHarmonyAdapter):
 
             # # --- Get granule filepath (url) ---
             netcdf_url = _get_item_url(items[0])
+            if netcdf_url is None:
+                raise ValueError("No URL found for item")
             filename = Path(netcdf_url).stem
 
             with TemporaryDirectory() as temp_dir:
                 # Download file
-                input_file = download_file(netcdf_url, temp_dir, self.message.accessToken, self.config)
+                input_file = download_file(
+                    netcdf_url, temp_dir, self.message.accessToken, self.config
+                )
 
                 # Zip filename is the input filename without the file extension
-                zip_file_name = input_file.split('/')[-1].split('.')[0]
+                zip_file_name = input_file.split("/")[-1].split(".")[0]
 
                 # Create the subdirectory
                 self.logger.info("Running Casper.")
 
                 # --- Run Casper ---
-                zip_file = f'{temp_dir}/{zip_file_name}.zip'
+                zip_file = f"{temp_dir}/{zip_file_name}.zip"
                 convert_to_csv(
                     input_file,
                     zip_file,
                     logger=self.logger,
                 )
 
-                self.logger.info(f"Casper conversion completed. Zip file created {zip_file_name}.zip")
-                staged_url = self._stage(zip_file, f'{zip_file_name}.zip',"application/zip")
+                self.logger.info(
+                    f"Casper conversion completed. Zip file created {zip_file_name}.zip"
+                )
+                staged_url = self._stage(zip_file, f"{zip_file_name}.zip", "application/zip")
 
             # -- Output to STAC catalog --
             result.clear_items()
