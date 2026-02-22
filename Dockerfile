@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 
-ARG VERSION
-ENV SETUPTOOLS_SCM_PRETEND_VERSION=$VERSION
+ARG CASPER_VERSION
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=$CASPER_VERSION
 RUN apt-get update \
      && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
     gcc \
@@ -10,7 +10,6 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove gcc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
 
 # Create a new user
 RUN adduser --quiet --disabled-password --shell /bin/sh \
@@ -27,6 +26,7 @@ COPY --chown=dockeruser:dockeruser docker-entrypoint.sh ./
 
 USER dockeruser
 RUN uv sync --extra harmony --frozen
+RUN uv tool run hatch version
 
 RUN chmod +x ./docker-entrypoint.sh
 
