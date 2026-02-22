@@ -10,13 +10,13 @@ CASPER is a Python package that converts NetCDF (.nc, .h5) files to one or more 
 
 Using xarray, CASPER obtains the dimensions identified in the NetCDF file and groups variables by the dimensional schema, then outputs each dimensional schema in a separate CSV file.
 
-# Getting started, with poetry
+# Getting started, with uv
 
-1. Follow the instructions for installing `poetry` [here](https://python-poetry.org/docs/).
+1. Follow the instructions for installing `uv` [here](https://docs.astral.sh/uv/getting-started/installation/).
 2. Install `casper`, with its dependencies, by running the following from the repository directory:
 
 ```shell
-poetry install
+uv sync
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ poetry install
 For example:
 
 ```shell
-poetry run casper TEMPO_NO2_L2_V04_S009G07.nc
+uv run casper TEMPO_NO2_L2_V04_S009G07.nc
 ```
 For example (_note that these are pseudo-real, not actual, TEMPO file names_):
 
@@ -33,9 +33,10 @@ casper TEMPO_NO2_L2_V04_S009G07.nc
 ```
 
 **Output:**
-- `Zip file TEMPO_NO2_L2_V04_S009G07.zip including csv files
--   `TEMPO_NO2_L2_V04_S009G07-0.csv`, → dimension 1 (ie, dimensions ('mirror_step', 'xtrack', 'corner'))
--   `TEMPO_NO2_L2_V04_S009G07-1.csv`, → dimension 2 (ie, dimensions('mirror_step', 'xtrack', 'swt_level'))
+
+Zip file `TEMPO_NO2_L2_V04_S009G07.zip` including csv files:
+-   `TEMPO_NO2_L2_V04_S009G07-0.csv`, → dimension schema 1 (ie, dimensions ('mirror_step', 'xtrack', 'corner'))
+-   `TEMPO_NO2_L2_V04_S009G07-1.csv`, → dimension schema 2 (ie, dimensions('mirror_step', 'xtrack', 'swt_level'))
 
 
 ### Key Features
@@ -45,11 +46,6 @@ casper TEMPO_NO2_L2_V04_S009G07.nc
 
 ## Installation
 
-### From PyPI (Recommended)
-```shell
-pip install casper
-```
-
 ### From Source (Development)
 
 For local development or the latest features:
@@ -57,19 +53,7 @@ For local development or the latest features:
 ```shell
 git clone <Repository URL>
 cd casper
-```
-
-**(Option A) using poetry (Recommended for development):**
-
-```shell
-# Install poetry: https://python-poetry.org/docs/
-poetry install
-```
-
-**(Option B) using pip:**
-
-```shell
-pip install .
+uv sync
 ```
 
 ## Usage
@@ -77,14 +61,8 @@ pip install .
 ### Basic Usage
 
 ```shell
-casper file_name
+uv run casper filename
 ```
-
-### With Poetry (if installed via poetry)
-```shell
-poetry run casper filename
-```
-
 
 ## Contributing
 
