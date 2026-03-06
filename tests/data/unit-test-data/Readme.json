@@ -1,13 +1,13 @@
 {
     "Notice": "The Readme.md file includes the same information",
-    "TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-0.csv": {
+    "TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-0_reformatted..csv": {
         "dimensions": "latitude,longitude",
         "non-dimensional coordinates": "",
         "variables": [
             "/weight"
         ]
     },
-    "TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-1.csv": {
+    "TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-1_reformatted..csv": {
         "dimensions": "time,latitude,longitude",
         "non-dimensional coordinates": "",
         "variables": [
