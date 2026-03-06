@@ -32,7 +32,7 @@ from urllib.parse import urlsplit
 from uuid import uuid4
 
 from harmony_service_lib.adapter import BaseHarmonyAdapter
-from harmony_service_lib.util import stage
+from harmony_service_lib.util import generate_output_filename, stage
 from pystac import Catalog, Item
 from pystac.item import Asset
 
@@ -98,8 +98,8 @@ class CasperAdapter(BaseHarmonyAdapter):
             netcdf_url = _get_item_url(items[0])
             if netcdf_url is None:
                 raise ValueError("No URL found for item")
-            filename = Path(netcdf_url).stem
 
+            zip_file = ""
             with TemporaryDirectory() as temp_dir:
                 # Download file
                 input_file = download_file(
@@ -112,19 +112,20 @@ class CasperAdapter(BaseHarmonyAdapter):
                 # Create the subdirectory
                 self.logger.info("Running Casper.")
 
+                # Use Harmony generated filename
+                zip_file = generate_output_filename(zip_file_name, ext="zip", is_reformatted=True)
+                zip_file = f"{temp_dir}/{zip_file}"
+
                 # --- Run Casper ---
-                zip_file = f"{temp_dir}/{zip_file_name}.zip"
                 convert_to_csv(
                     input_file,
                     zip_file,
                     logger=self.logger,
                 )
 
-                self.logger.info(
-                    f"Casper conversion completed. Zip file created {zip_file_name}.zip"
-                )
-                staged_url = self._stage(zip_file, f"{zip_file_name}.zip", "application/zip")
+                self.logger.info(f"Casper conversion completed. Zip file created {zip_file}")
 
+                staged_url = self._stage(zip_file, f"{zip_file.split('/')[-1]}", "application/zip")
             # -- Output to STAC catalog --
             result.clear_items()
             properties = {
@@ -138,11 +139,10 @@ class CasperAdapter(BaseHarmonyAdapter):
                 None,
                 properties,
             )
-            filename = f"{zip_file_name}.zip"
 
             asset = Asset(
                 staged_url,
-                title=filename,
+                title=f"{zip_file.split('/')[-1]}",
                 media_type="application/zip",
                 roles=["data"],
             )
