@@ -3,6 +3,7 @@ import logging
 import sys
 import zipfile
 from logging import Logger
+from pathlib import Path
 
 import xarray as xr
 from harmony_service_lib.util import generate_output_filename
@@ -121,7 +122,7 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                     schemas[dims] = []
                 schemas[dims].append(varname)
 
-        input_filename = fname.split("/")[-1]
+        input_filename = Path(fname).name
         vals = list(schemas.items())
 
         # Create the zip file object in write mode

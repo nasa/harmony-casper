@@ -99,7 +99,6 @@ class CasperAdapter(BaseHarmonyAdapter):
             if netcdf_url is None:
                 raise ValueError("No URL found for item")
 
-            zip_file = ""
             with TemporaryDirectory() as temp_dir:
                 # Download file
                 input_file = download_file(
@@ -107,14 +106,14 @@ class CasperAdapter(BaseHarmonyAdapter):
                 )
 
                 # Zip filename is the input filename without the file extension
-                zip_file_name = input_file.split("/")[-1].split(".")[0]
+                zip_file_name = Path(input_file).stem
 
                 # Create the subdirectory
                 self.logger.info("Running Casper.")
 
                 # Use Harmony generated filename
                 zip_file = generate_output_filename(zip_file_name, ext="zip", is_reformatted=True)
-                zip_file = f"{temp_dir}/{zip_file}"
+                zip_file = Path(temp_dir) / zip_file
 
                 # --- Run Casper ---
                 convert_to_csv(
@@ -125,7 +124,7 @@ class CasperAdapter(BaseHarmonyAdapter):
 
                 self.logger.info(f"Casper conversion completed. Zip file created {zip_file}")
 
-                staged_url = self._stage(zip_file, f"{zip_file.split('/')[-1]}", "application/zip")
+                staged_url = self._stage(zip_file, zip_file.name, "application/zip")
             # -- Output to STAC catalog --
             result.clear_items()
             properties = {
@@ -142,7 +141,7 @@ class CasperAdapter(BaseHarmonyAdapter):
 
             asset = Asset(
                 staged_url,
-                title=f"{zip_file.split('/')[-1]}",
+                title=zip_file.name,
                 media_type="application/zip",
                 roles=["data"],
             )
