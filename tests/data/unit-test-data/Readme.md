@@ -1,13 +1,13 @@
 # 2 CSV files created for TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4 based on dimensional schemas
 
 
-## TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-0.csv
+## TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-0_reformatted.csv
 	dimensions:  latitude, longitude
 	non-dimension coordinates:
 	1 variables:
 		/weight
 
-## TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-1.csv
+## TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4-1_reformatted.csv
 	dimensions:  time, latitude, longitude
 	non-dimension coordinates:
 	20 variables:

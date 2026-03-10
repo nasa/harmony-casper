@@ -2,9 +2,9 @@
 set -e
 
 if [ "$1" = 'casper' ]; then
-  exec casper "$@"
+  exec uv run casper "$@"
 elif [ "$1" = 'casper_harmony' ]; then
-  exec casper_harmony "$@"
+  exec uv run casper_harmony "$@"
 else
-  exec casper_harmony "$@"
+  exec uv run casper_harmony "$@"
 fi

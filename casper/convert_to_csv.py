@@ -3,8 +3,10 @@ import logging
 import sys
 import zipfile
 from logging import Logger
+from pathlib import Path
 
 import xarray as xr
+from harmony_service_lib.util import generate_output_filename
 
 from casper.file_ops import (
     valid_input_file,
@@ -120,7 +122,7 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                     schemas[dims] = []
                 schemas[dims].append(varname)
 
-        input_filename = fname.split("/")[-1]
+        input_filename = Path(fname).name
         vals = list(schemas.items())
 
         # Create the zip file object in write mode
@@ -131,7 +133,9 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
 
             for idx in range(len(vals)):
                 dims, vvs = vals[idx]
+                # Use Harmony generated filename
                 op_file = f"{input_filename}-{idx}.csv"
+                op_file = generate_output_filename(op_file, ext="csv", is_reformatted=True)
                 with zf.open(op_file, "w", force_zip64=True) as csv_file:
                     ds = xr.combine_by_coords([data[vv].rename(vv) for vv in vvs])
                     # Order columns: dimensions, non-dimensional coordinates, rest of variables

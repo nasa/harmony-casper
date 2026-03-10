@@ -1,14 +1,11 @@
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [project]
 name = "casper"
-dynamic = [
-    "version",
-    "classifiers"
-]
-description = "Convert NetCDF4 to one or more cvs files"
+dynamic = ["version"]
+description = "Convert NetCDF4 to one or more CSV files"
 license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.12,<4"
@@ -54,11 +51,12 @@ integration = [
     "harmony-py>=0.4.15"
 ]
 
-[tool.poetry]
-version = "1.8.1a0"
-packages = [
-    { include = "casper" },
-]
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+# This tells hatch-vcs to use an env var if git metadata is unavailable
+version_scheme = "no-guess-dev"
 
 [[tool.mypy.overrides]]
 module = "netCDF4.*"
