@@ -17,8 +17,8 @@ dependencies = [
     "xarray>=2026.4.0",
     "pystac>=1.14.3",
     "importlib-metadata>=9.0.0",
-    "requests (>=2.33.1,<3.0.0)",
-    "harmony-service-lib>=2.11.0"]
+    "requests (>=2.34.2,<3.0.0)",
+    "harmony-service-lib>=3.0.0"]
 
 [project.urls]
 Repository = "https://github.com/nasa/harmony-casper"
@@ -33,8 +33,8 @@ casper = 'casper.cli:main'
 [project.optional-dependencies]
 dev = [
     "pytest>=9.0.3",
-    "mypy>=1.20.2",
-    "ruff>=0.15.12",
+    "mypy>=2.1.0",
+    "ruff>=0.15.15",
     "pytest-cov>=7.1.0",
     "mkdocs>=1.6.1",
     "markdown-callouts>=0.4.0",
@@ -45,7 +45,7 @@ dev = [
     "mkdocstrings-python>=2.0.3",
 ]
 harmony = [
-    "harmony-service-lib>=2.11.0"
+    "harmony-service-lib>=3.0.0"
 ]
 
 [tool.hatch.version]
