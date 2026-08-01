@@ -14,8 +14,8 @@ authors = [
 ]
 dependencies = [
     "netcdf4>=1.7.4",
-    "xarray>=2026.4.0",
-    "pystac>=1.15.1",
+    "xarray>=2026.7.0",
+    "pystac>=1.15.2",
     "importlib-metadata>=9.0.0",
     "requests (>=2.34.2,<3.0.0)",
     "harmony-service-lib>=3.0.0"]
@@ -33,15 +33,15 @@ casper = 'casper.cli:main'
 [project.optional-dependencies]
 dev = [
     "pytest>=9.1.1",
-    "mypy>=2.1.0",
-    "ruff>=0.15.20",
+    "mypy>=2.3.0",
+    "ruff>=0.16.0",
     "pytest-cov>=7.1.0",
     "mkdocs>=1.6.1",
     "markdown-callouts>=0.4.0",
     "markdown-include>=0.8.1",
-    "mkdocstrings>=1.0.4",
+    "mkdocstrings>=1.0.6",
     "mkdocs-jupyter>=0.26.3",
-    "mkdocs-material>=9.7.6",
+    "mkdocs-material>=9.7.7",
     "mkdocstrings-python>=2.0.5",
 ]
 harmony = [
