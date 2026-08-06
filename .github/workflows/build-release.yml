@@ -77,3 +77,42 @@ jobs:
             --title "Release ${current_tag}" \
             --generate-notes \
             --draft
+
+publish_to_pypitest:
+  needs: push_docker
+  runs-on: ubuntu-latest
+  permissions:
+    pull-requests: write
+  steps:
+    - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+    - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-path: "pyproject.toml"
+    - name: Install dependencies
+        run: uv sync --extra dev --extra harmony --frozen
+
+    - name: Build package
+        run: uv build
+
+    - name: Upload Python artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-artifact
+          path: dist/*
+
+    - name: Publish to Test PyPI
+        if: steps.check_merge.outputs.is_merge == 'true' && steps.version.outputs.publish == 'true'
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN_TESTPYPI }}
+        run: uv publish --publish-url https://test.pypi.org/legacy/

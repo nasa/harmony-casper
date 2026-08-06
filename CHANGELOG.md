@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
+- Updated to publish the package to PyPI and PyPI test. ([#11](https://github.com/nasa/harmony-casper/issues/11))
 
 - Implemented new streamlined release workflow. ([#28](https://github.com/nasa/harmony-casper/issues/28))
 

@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "casper"
+name = "harmony-casper"
 dynamic = ["version"]
 description = "Convert NetCDF4 to one or more CSV files"
 license = {file = "LICENSE"}
