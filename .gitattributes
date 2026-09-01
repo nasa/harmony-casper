@@ -1,2 +1,4 @@
-# Golden fixtures are byte-compared by the test suite; never translate line endings.
-tests/data/** -text
+# Fixtures under tests/data are byte-compared by the test suite, so their line
+# endings must never be translated on checkout. text=auto leaves the NetCDF
+# granule untouched while keeping the CSV/JSON/Markdown fixtures diffable.
+tests/data/** text=auto eol=lf
