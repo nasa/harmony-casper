@@ -20,6 +20,12 @@ def test_cli():
         fname,
     ]
 
+    cwd = os.getcwd()
     with TemporaryDirectory() as temp_dir, patch.object(sys, "argv", test_args):
-        os.chdir(temp_dir)
-        casper.cli.main()
+        try:
+            os.chdir(temp_dir)
+            casper.cli.main()
+        finally:
+            # Restore before the TemporaryDirectory is removed; Windows cannot
+            # delete a directory that is any process's current working directory.
+            os.chdir(cwd)

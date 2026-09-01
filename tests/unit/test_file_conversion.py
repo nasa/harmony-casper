@@ -1,4 +1,5 @@
 import logging
+import os
 from os import listdir
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -23,7 +24,7 @@ def test_coversion():
     csv_test_files = sorted([f.split("/")[-1] for f in listdir(f"{test_data_dir}") if "csv" in f])
     num_csv_test_files = len(csv_test_files)
     with TemporaryDirectory() as temp_dir:
-        zip_file_name = fname.split("/")[-1].split(".")[0]
+        zip_file_name = Path(fname).stem
 
         # Convert test file to CSVs
         zip_file = f"{temp_dir}/{zip_file_name}.zip"
@@ -47,3 +48,28 @@ def test_coversion():
             f1 = Path(f"{temp_dir}") / f"{f}"
             f2 = Path(f"{test_data_dir}") / f"{f}"
             assert f1.read_bytes() == f2.read_bytes()
+
+
+def test_csv_line_endings_are_host_independent(monkeypatch):
+    """CSV output must not vary with the host OS line separator.
+
+    pandas defaults ``to_csv(lineterminator=...)`` to ``os.linesep``, so without an
+    explicit terminator the same granule yields different bytes on Windows and Linux.
+    """
+    monkeypatch.setattr(os, "linesep", "\r\n")
+
+    fname = str(
+        data_for_tests_dir
+        / "unit-test-data"
+        / "TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc"
+    )
+
+    with TemporaryDirectory() as temp_dir:
+        zip_file = f"{temp_dir}/{Path(fname).stem}.zip"
+        convert_to_csv(fname, zip_file, logger=module_logger)
+
+        with ZipFile(zip_file, "r") as zip_ref:
+            csv_names = [n for n in zip_ref.namelist() if n.endswith(".csv")]
+            assert csv_names
+            for name in csv_names:
+                assert b"\r\n" not in zip_ref.read(name), f"{name} contains CRLF line endings"
