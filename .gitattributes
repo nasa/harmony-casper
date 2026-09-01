@@ -1,0 +1,2 @@
+# Golden fixtures are byte-compared by the test suite; never translate line endings.
+tests/data/** -text
