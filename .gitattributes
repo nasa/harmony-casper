@@ -1,4 +1,3 @@
-# Fixtures under tests/data are byte-compared by the test suite, so their line
-# endings must never be translated on checkout. text=auto leaves the NetCDF
-# granule untouched while keeping the CSV/JSON/Markdown fixtures diffable.
+# Fixtures under tests/data are byte-compared by the test suite, so they must always be checked out with LF line endings (no CRLF).
+# text=auto leaves the NetCDF granule untouched while keeping the CSV/JSON/Markdown fixtures diffable.
 tests/data/** text=auto eol=lf
