@@ -172,8 +172,11 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                         # Convert the small chunk to a pandas DataFrame
                         df_chunk = chunk.to_dataframe().dropna(how="all", subset=vvs)
 
-                        # Write header for the first chunk only
-                        df_chunk.to_csv(csv_file, header=(i == 0))
+                        # Write header for the first chunk only.
+                        # Pin the line terminator: pandas defaults to os.linesep, which
+                        # makes the CSV bytes differ between Windows and Linux hosts for
+                        # the same granule.
+                        df_chunk.to_csv(csv_file, header=(i == 0), lineterminator="\n")
 
                         del df_chunk
 
