@@ -14,7 +14,7 @@ def test_valid_workable_file():
     path_to_test_data_file = str(
         data_for_tests_dir
         / "unit-test-data"
-        / "TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4"
+        / "TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc"
     )
 
     assert valid_workable_file(path_to_test_data_file)
@@ -24,6 +24,6 @@ def test_valid_input_file():
     path_to_test_data_file = str(
         data_for_tests_dir
         / "unit-test-data"
-        / "TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4"
+        / "TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc"
     )
     assert valid_input_file(path_to_test_data_file)

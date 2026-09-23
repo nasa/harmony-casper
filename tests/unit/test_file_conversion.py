@@ -17,10 +17,11 @@ def test_coversion():
     fname = str(
         data_for_tests_dir
         / "unit-test-data"
-        / "TEMPO_HCHO_L3_V04_20250912T210435Z_S012_subsetted.nc4"
+        / "TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc"
     )
     test_data_dir = str(data_for_tests_dir / "unit-test-data/")
-
+    csv_test_files = sorted([f.split("/")[-1] for f in listdir(f"{test_data_dir}") if "csv" in f])
+    num_csv_test_files = len(csv_test_files)
     with TemporaryDirectory() as temp_dir:
         zip_file_name = fname.split("/")[-1].split(".")[0]
 
@@ -31,7 +32,7 @@ def test_coversion():
             zip_file,
             logger=module_logger,
         )
-        assert num_csv_files == 2
+        assert num_csv_files == num_csv_test_files
         # Extract converted files and compare to test files in unit-test-data
         with ZipFile(zip_file, "r") as zip_ref:
             zip_ref.extractall(temp_dir)
@@ -43,6 +44,6 @@ def test_coversion():
         )
         assert op_files == test_files
         for f in test_files:
-            f = Path(f"{temp_dir}") / f"{f}"
+            f1 = Path(f"{temp_dir}") / f"{f}"
             f2 = Path(f"{test_data_dir}") / f"{f}"
-            assert f.read_bytes() == f2.read_bytes()
+            assert f1.read_bytes() == f2.read_bytes()
