@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker build --build-arg CASPER_VERSION=`uv tool run hatch version` -t "asdc-trade/casper:${VERSION-latest}" .
+export SERVICE_VERSION=`uv tool run hatch version`
+docker build -f Dockerfile --build-arg SERVICE_VERSION=$SERVICE_VERSION -t "harmony/casper:${VERSION-latest}" .

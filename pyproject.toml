@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "casper"
+name = "harmony-casper"
 dynamic = ["version"]
 description = "Convert NetCDF4 to one or more CSV files"
 license = {file = "LICENSE"}
@@ -44,9 +44,6 @@ dev = [
     "mkdocs-material>=9.7.7",
     "mkdocstrings-python>=2.0.7",
 ]
-harmony = [
-    "harmony-service-lib>=3.0.0"
-]
 
 [tool.hatch.version]
 source = "vcs"
@@ -55,9 +52,8 @@ source = "vcs"
 # This tells hatch-vcs to use an env var if git metadata is unavailable
 version_scheme = "no-guess-dev"
 
-[[tool.mypy.overrides]]
-module = "netCDF4.*"
-ignore_missing_imports = true
+[tool.hatch.build.targets.wheel]
+packages = ["casper"]
 
 [tool.ruff]
 builtins = ["ellipsis"]
