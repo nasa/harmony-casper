@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+- Renamed project to `harmony-casper` to avoid name collision in PyPI. ([#47](https://github.com/nasa/harmony-casper/pull/47))
+
 ## [1.0.0] - 2026-09-22
 
 ### Added
