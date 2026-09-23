@@ -28,11 +28,10 @@ COPY --chown=dockeruser:dockeruser uv.lock ./
 COPY --chown=dockeruser:dockeruser --chmod=755 docker-entrypoint.sh ./
 
 USER dockeruser
-RUN uv sync --extra harmony --frozen
+RUN uv sync --frozen
 RUN uv tool run hatch version
 
 ENV HOME=/home/dockeruser
 ENV PATH="/worker/.venv/bin:$PATH"
 
-# Run the service
 ENTRYPOINT ["./docker-entrypoint.sh"]
