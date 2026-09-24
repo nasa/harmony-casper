@@ -2,4 +2,4 @@
 
 from importlib.metadata import version
 
-__version__ = version("casper")
+__version__ = version("harmony-casper")
