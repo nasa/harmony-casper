@@ -107,6 +107,12 @@ def _is_file_empty(dataset: nc.Dataset | nc.Group) -> bool:
         # Load the data
         var_data = var[:]
 
+        # Text has no NaN representation; retain any unmasked characters or strings.
+        if var.dtype is str or var_data.dtype.kind in "SU":
+            if np.ma.count(var_data):
+                return False
+            continue
+
         # Check if variable is non-empty using three different methods
         # Check 1: Are all values masked?
         if np.ma.isMaskedArray(var_data) and (
