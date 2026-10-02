@@ -4,6 +4,7 @@ import sys
 import zipfile
 from logging import Logger
 from pathlib import Path
+
 import pandas as pd
 import xarray as xr
 from harmony_service_lib.util import generate_output_filename
@@ -159,13 +160,13 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                         "variables": vvs,
                     }
 
-                    # If no dimensions, just single scalar values, create the dataframe and 
+                    # If no dimensions, just single scalar values, create the dataframe and
                     # write whole thing to csv file
                     if not len(dims):
                         chunk = ds.compute()
                         df_chunk = pd.DataFrame([{k: v.item() for k, v in ds.data_vars.items()}])
-                        df_chunk.insert(loc=0, column='No dimensions', value=['True'])
-                        df_chunk.to_csv(csv_file,index=False)
+                        df_chunk.insert(loc=0, column="No dimensions", value=["True"])
+                        df_chunk.to_csv(csv_file, index=False)
                         del df_chunk
                     else:
                         prime_dim = next(iter(ds.sizes.items()))

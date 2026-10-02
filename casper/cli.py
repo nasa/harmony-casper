@@ -2,7 +2,6 @@
 
 import logging
 import sys
-
 from pathlib import Path
 
 from casper.convert_to_csv import convert_to_csv
