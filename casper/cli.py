@@ -3,6 +3,8 @@
 import logging
 import sys
 
+from pathlib import Path
+
 from casper.convert_to_csv import convert_to_csv
 from casper.file_ops import (
     valid_input_file,
@@ -17,7 +19,7 @@ def run_casper(input_file: str):
 
     if not valid_workable_file(input_file):
         raise ValueError("Input file not valid")
-    zip_file_name = f"{input_file.split('/')[-1].split('.')[0]}.zip"
+    zip_file_name = f"{Path(input_file).stem}.zip"
     convert_to_csv(input_file, zip_file_name)
 
 

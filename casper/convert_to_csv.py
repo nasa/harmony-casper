@@ -4,7 +4,7 @@ import sys
 import zipfile
 from logging import Logger
 from pathlib import Path
-
+import pandas as pd
 import xarray as xr
 from harmony_service_lib.util import generate_output_filename
 
@@ -108,7 +108,7 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
 
     try:
         # Open file as xarray datatree
-        data = xr.open_datatree(fname)
+        data = xr.open_datatree(fname, chunks="auto")
 
         # Loops datatree items to gather info for various dimension groups
         for path, ds in data.to_dict().items():
@@ -159,23 +159,31 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                         "variables": vvs,
                     }
 
-                    chunk_size = 10
-                    data_len = 0
-                    prime_dim = next(iter(ds.sizes.items()))
-                    dim_var = prime_dim[0]
-                    data_len = prime_dim[1]
-                    for i in range(0, data_len, chunk_size):
-                        # Process a slice of the dataset
-                        indexer = {dim_var: slice(i, i + chunk_size)}
-                        ds_chunk = ds.isel(indexer)
-                        chunk = ds_chunk.compute()
-                        # Convert the small chunk to a pandas DataFrame
-                        df_chunk = chunk.to_dataframe().dropna(how="all", subset=vvs)
-
-                        # Write header for the first chunk only
-                        df_chunk.to_csv(csv_file, header=(i == 0))
-
+                    # If no dimensions, just single scalar values, create the dataframe and 
+                    # write whole thing to csv file
+                    if not len(dims):
+                        chunk = ds.compute()
+                        df_chunk = pd.DataFrame([{k: v.item() for k, v in ds.data_vars.items()}])
+                        df_chunk.insert(loc=0, column='No dimensions', value=['True'])
+                        df_chunk.to_csv(csv_file,index=False)
                         del df_chunk
+                    else:
+                        prime_dim = next(iter(ds.sizes.items()))
+                        dim_var = prime_dim[0]
+                        data_len = prime_dim[1]
+                        chunk_size = 10
+                        for i in range(0, data_len, chunk_size):
+                            # Process a slice of the dataset
+                            indexer = {dim_var: slice(i, i + chunk_size)}
+                            ds_chunk = ds.isel(indexer)
+                            chunk = ds_chunk.compute()
+                            # Convert the small chunk to a pandas DataFrame
+                            df_chunk = chunk.to_dataframe().dropna(how="all", subset=vvs)
+
+                            # Write header for the first chunk only
+                            df_chunk.to_csv(csv_file, header=(i == 0))
+
+                            del df_chunk
 
                 logger.info(f" {op_file} added to zip file")
                 num_csv_files += 1
