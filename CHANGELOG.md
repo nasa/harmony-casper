@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - 2026-09-24
 
+### Fixed
+
+- Convert scalar NetCDF variables into a one-row CSV schema instead of raising
+  `StopIteration`, while preserving chunked conversion for dimensional variables
+  ([#41](https://github.com/nasa/harmony-casper/issues/41)).
+
 ### Changed
 - Renamed project to `harmony-casper` to avoid name collision in PyPI. ([#47](https://github.com/nasa/harmony-casper/pull/47))
 

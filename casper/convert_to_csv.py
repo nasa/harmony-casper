@@ -5,6 +5,7 @@ import zipfile
 from logging import Logger
 from pathlib import Path
 
+import pandas as pd  # type: ignore[import-untyped]
 import xarray as xr
 from harmony_service_lib.util import generate_output_filename
 
@@ -159,23 +160,30 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                         "variables": vvs,
                     }
 
-                    chunk_size = 10
-                    data_len = 0
-                    prime_dim = next(iter(ds.sizes.items()))
-                    dim_var = prime_dim[0]
-                    data_len = prime_dim[1]
-                    for i in range(0, data_len, chunk_size):
-                        # Process a slice of the dataset
-                        indexer = {dim_var: slice(i, i + chunk_size)}
-                        ds_chunk = ds.isel(indexer)
-                        chunk = ds_chunk.compute()
-                        # Convert the small chunk to a pandas DataFrame
-                        df_chunk = chunk.to_dataframe().dropna(how="all", subset=vvs)
+                    if not dims:
+                        # A scalar schema has one row and no dimension index.
+                        # Keep columns separate so mixed types retain their values.
+                        values = {name: ds[name].values.reshape(1) for name in ds.variables}
+                        scalar_frame = pd.DataFrame(values).dropna(how="all", subset=vvs)
+                        scalar_frame.to_csv(csv_file, index=False)
+                    else:
+                        chunk_size = 10
+                        data_len = 0
+                        prime_dim = next(iter(ds.sizes.items()))
+                        dim_var = prime_dim[0]
+                        data_len = prime_dim[1]
+                        for i in range(0, data_len, chunk_size):
+                            # Process a slice of the dataset
+                            indexer = {dim_var: slice(i, i + chunk_size)}
+                            ds_chunk = ds.isel(indexer)
+                            chunk = ds_chunk.compute()
+                            # Convert the small chunk to a pandas DataFrame
+                            df_chunk = chunk.to_dataframe().dropna(how="all", subset=vvs)
 
-                        # Write header for the first chunk only
-                        df_chunk.to_csv(csv_file, header=(i == 0))
+                            # Write header for the first chunk only
+                            df_chunk.to_csv(csv_file, header=(i == 0))
 
-                        del df_chunk
+                            del df_chunk
 
                 logger.info(f" {op_file} added to zip file")
                 num_csv_files += 1
