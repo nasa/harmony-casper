@@ -50,12 +50,15 @@ def create_markdown(md, ds, input_filename):
     header = f"## {len(md)} CSV files created for {input_filename} based on dimensional schemas\n\n"
     data = ""
     for k, v in md.items():
+        # Get dimensions and non-dimentsion coordinates from the key
+        dims_coords = k
+        dims = dims_coords[0]
+        coords = list(dims_coords[1])
         data += f"### {v['filename']}\n"
         data += "\tdimensions:"
-        if len(k) > 0:
-            data += f"   {', '.join(k)}"
+        if len(dims) > 0:
+            data += f"   {', '.join(dims)}"
         data += "\n\tnon-dimension coordinates:"
-        coords = [c for c in v["coords"] if c not in v["keys"]]
         if len(coords) > 0:
             data += f"   {', '.join(coords)}"
         data += f"\n\t{len(v['vrbs'])} variables:\n"
@@ -154,7 +157,7 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                     ds = ds[cols]
 
                     # Add info to markdown and json dictionaries for creation of Readmes
-                    md[dims] = {
+                    md[dims_coords] = {
                         "filename": op_file,
                         "keys": dims,
                         "coords": coords,
