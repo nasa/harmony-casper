@@ -5,6 +5,7 @@ import zipfile
 from logging import Logger
 from pathlib import Path
 
+import pandas as pd
 import xarray as xr
 from harmony_service_lib.util import generate_output_filename
 
@@ -49,12 +50,15 @@ def create_markdown(md, ds, input_filename):
     header = f"## {len(md)} CSV files created for {input_filename} based on dimensional schemas\n\n"
     data = ""
     for k, v in md.items():
+        # Get dimensions and non-dimentsion coordinates from the key
+        dims_coords = k
+        dims = dims_coords[0]
+        coords = list(dims_coords[1])
         data += f"### {v['filename']}\n"
         data += "\tdimensions:"
-        if len(k) > 0:
-            data += f"   {', '.join(k)}"
+        if len(dims) > 0:
+            data += f"   {', '.join(dims)}"
         data += "\n\tnon-dimension coordinates:"
-        coords = [c for c in v["coords"] if c not in v["keys"]]
         if len(coords) > 0:
             data += f"   {', '.join(coords)}"
         data += f"\n\t{len(v['vrbs'])} variables:\n"
@@ -80,6 +84,30 @@ def json_readme(ds, input_filename, json_obj):
     return
 
 
+def find_variable_path(dt, var_name):
+    paths = set()
+    for node in dt.subtree:
+        if var_name in node.data_vars or var_name in node.coords or var_name in node.variables:
+            path = node.path if node.path != "/" else ""
+            paths.add(f"{path}/{var_name}")
+    return paths
+
+
+def get_coords_paths(dt):
+    all_coords = set()
+    for node in dt.subtree:
+        path = node.path if node.path != "/" else ""
+        for varname in node.data_vars:
+            coords = dt[f"{path}/{varname}"].encoding.get("coordinates")
+            coords = coords.split(" ") if coords else []
+            all_coords.update(coords)
+
+    paths = []
+    for x in all_coords:
+        paths += list(find_variable_path(dt, x))
+    return paths
+
+
 def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -> int:
     """
     Converts NetCDF file to one or more CSV files. The number of files will
@@ -101,27 +129,42 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
     """
     xr.set_options(use_new_combine_kwarg_defaults=True)
     num_csv_files = 0
-    schemas: dict[str | tuple[str, ...], list[str]] = {}
+    schemas: dict[str | tuple[tuple, ...], list[str]] = {}
     md = {}
     json_obj: dict[str, str | dict] = {}
     json_obj["Notice"] = "The Readme.md file includes the same information"
 
     try:
         # Open file as xarray datatree
-        data = xr.open_datatree(fname)
+        data = xr.open_datatree(fname, chunks="auto")
+        coords_paths = get_coords_paths(data)
 
         # Loops datatree items to gather info for various dimension groups
         for path, ds in data.to_dict().items():
             if path == "/":
                 path = ""
-            variables = list(ds.variables)
+            variables = list(ds.data_vars)
+
             products = [f"{path}/{vv}" for vv in variables if vv not in ds.coords]
             for varname in products:
                 dims = data[varname].dims
-                if dims not in schemas:
-                    schemas[dims] = []
-                schemas[dims].append(varname)
+                coords = data[varname].encoding.get("coordinates")
+                coords = coords.split(" ") if coords else []
+                coords = [coord for coord in coords if coord not in dims]
+                coords.sort()
+                coords_with_paths = []
+                for coord in coords:
+                    if f"{path}/{coord}" in coords_paths:
+                        coords_with_paths.append(f"{path}/{coord}")
+                    else:
+                        matches = [item for item in coords_paths if coord == item.split("/")[-1]]
+                        coords_with_paths.append(matches[0])
 
+                # Create key that combines dimensions and coordinates
+                group_key = (dims, tuple(coords_with_paths))
+                if group_key not in schemas:
+                    schemas[group_key] = []
+                schemas[group_key].append(varname)
         input_filename = Path(fname).name
 
         # Sort the list of variables and the coordinates for consistency of output between systems
@@ -134,48 +177,61 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
             logger.info(f"Creating {len(sorted_schemas)} CSV files for {input_filename}")
 
             for idx in range(len(sorted_schemas)):
-                dims, vvs = sorted_schemas[idx]
+                dims_coords, vvs = sorted_schemas[idx]
+                dims = dims_coords[0]
+                coords = list(dims_coords[1])
                 # Use Harmony generated filename
                 op_file = f"{input_filename}-{idx}.csv"
                 op_file = generate_output_filename(op_file, ext="csv", is_reformatted=True)
                 with zf.open(op_file, "w", force_zip64=True) as csv_file:
-                    ds = xr.combine_by_coords([data[vv].rename(vv) for vv in vvs])
+                    ds = xr.combine_by_coords([data[vv].rename(vv) for vv in vvs + coords])
+
                     # Order columns: dimensions, non-dimensional coordinates, rest of variables
-                    cols = list(dims) + list(ds.coords) + vvs
+                    cols = list(dims) + coords + vvs
                     ds = ds[cols]
 
                     # Add info to markdown and json dictionaries for creation of Readmes
-                    md[dims] = {
+                    md[dims_coords] = {
                         "filename": op_file,
                         "keys": dims,
-                        "coords": list(ds.coords),
+                        "coords": coords,
                         "vrbs": vvs,
                     }
                     json_obj[op_file] = {
                         "dimensions": ",".join(list(dims)),
-                        "non-dimensional coordinates": ",".join(
-                            [c for c in list(ds.coords) if c not in list(dims)]
-                        ),
+                        "non-dimensional coordinates": ",".join(coords),
                         "variables": vvs,
                     }
 
-                    chunk_size = 10
-                    data_len = 0
-                    prime_dim = next(iter(ds.sizes.items()))
-                    dim_var = prime_dim[0]
-                    data_len = prime_dim[1]
-                    for i in range(0, data_len, chunk_size):
-                        # Process a slice of the dataset
-                        indexer = {dim_var: slice(i, i + chunk_size)}
-                        ds_chunk = ds.isel(indexer)
-                        chunk = ds_chunk.compute()
-                        # Convert the small chunk to a pandas DataFrame
-                        df_chunk = chunk.to_dataframe().dropna(how="all", subset=vvs)
-
-                        # Write header for the first chunk only
-                        df_chunk.to_csv(csv_file, header=(i == 0))
-
+                    # If no dimensions, just single scalar values, create the dataframe and
+                    # write whole thing to csv file
+                    if not len(dims):
+                        chunk = ds.compute()
+                        df_chunk = pd.DataFrame([{k: v.item() for k, v in ds.data_vars.items()}])
+                        df_chunk.insert(loc=0, column="No dimensions", value=["True"])
+                        df_chunk.to_csv(csv_file, index=False)
                         del df_chunk
+                    else:
+                        prime_dim = next(iter(ds.sizes.items()))
+                        dim_var = prime_dim[0]
+                        data_len = prime_dim[1]
+                        chunk_size = 10
+                        for i in range(0, data_len, chunk_size):
+                            # Process a slice of the dataset
+                            indexer = {dim_var: slice(i, i + chunk_size)}
+                            ds_chunk = ds.isel(indexer)
+                            chunk = ds_chunk.compute()
+                            # xarray to dataframe include coords, but we're including them with
+                            #  the full path. So, we drop the coord vars without the full path
+                            cols_to_drop = [col for col in ds.coords if col not in dims]
+                            df_chunk = (
+                                chunk.drop_vars(cols_to_drop).to_dataframe().dropna(how="all")
+                            )
+
+                            # Write header for the first chunk only
+                            df_chunk.to_csv(csv_file, header=(i == 0))
+
+                            del df_chunk
 
                 logger.info(f" {op_file} added to zip file")
                 num_csv_files += 1
@@ -211,7 +267,7 @@ def main():
     )
     if len(sys.argv) < 2:
         print("Must specify an input file")
-        exit()
+        sys.exit(1)
 
     input_file = sys.argv[1]
 
@@ -221,8 +277,7 @@ def main():
 
     if not valid_workable_file(input_file):
         raise ValueError("Input file not valid")
-    zip_file_name = f"{input_file.split('/')[-1].split('.')[0]}.zip"
-
+    zip_file_name = f"{Path(input_file).stem}.zip"
     convert_to_csv(input_file, zip_file_name)
 
 
