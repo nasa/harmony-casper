@@ -2,6 +2,7 @@ import json
 import logging
 import sys
 import zipfile
+from collections import defaultdict
 from logging import Logger
 from pathlib import Path
 
@@ -50,10 +51,8 @@ def create_markdown(md, ds, input_filename):
     header = f"## {len(md)} CSV files created for {input_filename} based on dimensional schemas\n\n"
     data = ""
     for k, v in md.items():
-        # Get dimensions and non-dimentsion coordinates from the key
-        dims_coords = k
-        dims = dims_coords[0]
-        coords = list(dims_coords[1])
+        dims = k
+        coords = [c for c in v["coords"] if c not in v["keys"]]
         data += f"### {v['filename']}\n"
         data += "\tdimensions:"
         if len(dims) > 0:
@@ -129,11 +128,12 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
     """
     xr.set_options(use_new_combine_kwarg_defaults=True)
     num_csv_files = 0
-    schemas: dict[str | tuple[tuple, ...], list[str]] = {}
+    schemas: dict[str | tuple[str, ...], list[str]] = {}
+    dim_coords = defaultdict(set)
+
     md = {}
     json_obj: dict[str, str | dict] = {}
     json_obj["Notice"] = "The Readme.md file includes the same information"
-
     try:
         # Open file as xarray datatree
         data = xr.open_datatree(fname, chunks="auto")
@@ -148,23 +148,21 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
             products = [f"{path}/{vv}" for vv in variables if vv not in ds.coords]
             for varname in products:
                 dims = data[varname].dims
+                if dims not in schemas:
+                    schemas[dims] = []
+                schemas[dims].append(varname)
+
                 coords = data[varname].encoding.get("coordinates")
                 coords = coords.split(" ") if coords else []
                 coords = [coord for coord in coords if coord not in dims]
-                coords.sort()
-                coords_with_paths = []
+
                 for coord in coords:
                     if f"{path}/{coord}" in coords_paths:
-                        coords_with_paths.append(f"{path}/{coord}")
+                        dim_coords[dims].add(f"{path}/{coord}")
                     else:
                         matches = [item for item in coords_paths if coord == item.split("/")[-1]]
-                        coords_with_paths.append(matches[0])
-
-                # Create key that combines dimensions and coordinates
-                group_key = (dims, tuple(coords_with_paths))
-                if group_key not in schemas:
-                    schemas[group_key] = []
-                schemas[group_key].append(varname)
+                        if matches:
+                            dim_coords[dims].add(matches[0])
         input_filename = Path(fname).name
 
         # Sort the list of variables and the coordinates for consistency of output between systems
@@ -177,21 +175,21 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
             logger.info(f"Creating {len(sorted_schemas)} CSV files for {input_filename}")
 
             for idx in range(len(sorted_schemas)):
-                dims_coords, vvs = sorted_schemas[idx]
-                dims = dims_coords[0]
-                coords = list(dims_coords[1])
+                dims, vvs = sorted_schemas[idx]
+                coords = list(dim_coords.get(dims, ()))
+                coords.sort()
+
                 # Use Harmony generated filename
                 op_file = f"{input_filename}-{idx}.csv"
                 op_file = generate_output_filename(op_file, ext="csv", is_reformatted=True)
                 with zf.open(op_file, "w", force_zip64=True) as csv_file:
                     ds = xr.combine_by_coords([data[vv].rename(vv) for vv in vvs + coords])
-
                     # Order columns: dimensions, non-dimensional coordinates, rest of variables
                     cols = list(dims) + coords + vvs
                     ds = ds[cols]
 
                     # Add info to markdown and json dictionaries for creation of Readmes
-                    md[dims_coords] = {
+                    md[dims] = {
                         "filename": op_file,
                         "keys": dims,
                         "coords": coords,
@@ -199,7 +197,9 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                     }
                     json_obj[op_file] = {
                         "dimensions": ",".join(list(dims)),
-                        "non-dimensional coordinates": ",".join(coords),
+                        "non-dimensional coordinates": ",".join(
+                            [c for c in coords if c not in list(dims)]
+                        ),
                         "variables": vvs,
                     }
 
