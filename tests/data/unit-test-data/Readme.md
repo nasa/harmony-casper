@@ -1,4 +1,4 @@
-## 2 CSV files created for TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc based on dimensional schemas
+## 3 CSV files created for TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc based on dimensional schemas
 
 
 ### TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc-0_reformatted.csv
@@ -10,11 +10,16 @@
 ### TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc-1_reformatted.csv
 	dimensions:   mirror_step, xtrack
 	non-dimension coordinates:
-	4 variables:
+	2 variables:
 		/geolocation/latitude
 		/geolocation/longitude
-		/product/vertical_column_stratosphere
-		/product/vertical_column_troposphere
+
+### TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc-2_reformatted.csv
+	dimensions:   mirror_step, xtrack, corner
+	non-dimension coordinates:
+	2 variables:
+		/geolocation/latitude_bounds
+		/geolocation/longitude_bounds
 
 
 # TEMPO_NO2_L2_V04_20250917T215552Z_S012G09_subsetted.nc Global Attributes:
@@ -139,18 +144,18 @@
 		END
 		creator_url: http://tempo.si.edu
 		day_of_year: 260
-		geospatial_bounds: POLYGON ((-137.96747 57.00004, -149.99480 57.00004, -149.99480 61.65218, -137.96747 61.65218, -137.96747 57.00004))
+		geospatial_bounds: POLYGON ((-139.49364 57.57100, -163.30795 57.57100, -163.30795 57.78797, -139.49364 57.78797, -139.49364 57.57100))
 		geospatial_bounds_crs: EPSG:4326
-		geospatial_lat_max: 61.65218
-		geospatial_lat_min: 57.00004
-		geospatial_lon_max: -137.96747
-		geospatial_lon_min: -149.9948
+		geospatial_lat_max: 57.78797
+		geospatial_lat_min: 57.571
+		geospatial_lon_max: -139.49364
+		geospatial_lon_min: -163.30795
 		granule_num: 9
 		history: 2025-09-18T00:20:07Z:/tempo/nas0/sdpc_soft/install/gnu-rh8/sdpc/v4p7p0/bin/L1_trace_gas -tempo -wrt_odl
 		2025-09-18T01:03:17Z:destriping correction
 		2025-09-18T01:03:36Z: L2_split -v -c /tempo/nas0/sdpc/liveroot/temposdpc/ops5/etc/l2_split.cfg /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G01/NO2/TEMPO_NO2_L2_V04_20250917T210248Z_S012G01.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G02/NO2/TEMPO_NO2_L2_V04_20250917T210928Z_S012G02.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G03/NO2/TEMPO_NO2_L2_V04_20250917T211608Z_S012G03.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G04/NO2/TEMPO_NO2_L2_V04_20250917T212246Z_S012G04.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G05/NO2/TEMPO_NO2_L2_V04_20250917T212923Z_S012G05.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G06/NO2/TEMPO_NO2_L2_V04_20250917T213600Z_S012G06.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G07/NO2/TEMPO_NO2_L2_V04_20250917T214238Z_S012G07.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G08/NO2/TEMPO_NO2_L2_V04_20250917T214915Z_S012G08.nc /tempo/nas0/sdpc_archive/temposdpc/ops5/L2/RAD/D16691/S012/G09/NO2/TEMPO_NO2_L2_V04_20250917T215552Z_S012G09.nc
-		2026-05-12 11:47:19.554654 l2ss-py v3.4.0a13 (cut=False, pixel_subset=False, bbox=[[-150, -130], [57, 66]], variables=['product/vertical_column_stratosphere', 'product/vertical_column_troposphere'])
-		history_json: [{"date_time": "2026-05-12T11:47:19.554953+00:00", "derived_from": "1f309215dd58f049dc5a4e50eb2cb5c59c54fec6869f695f4bdc645d2c70640f.nc", "program": "l2ss-py", "version": "3.4.0a13", "parameters": {"cut": false, "pixel_subset": false, "bbox": [[-150, -130], [57, 66]], "variables": ["product/vertical_column_stratosphere", "product/vertical_column_troposphere"]}, "program_ref": "https://cmr.earthdata.nasa.gov:443/search/concepts/S1962070864-POCLOUD", "$schema": "https://harmony.earthdata.nasa.gov/schemas/history/0.1.0/history-v0.1.0.json"}]
+		2026-10-21 11:45:35.462758 podaac-l2ss-py v3.3.4rc11 (cut=False, pixel_subset=False, bbox=[[-139.03, -139.48], [57.57, 57.79]], variables=['geolocation/latitude_bounds', 'geolocation/longitude_bounds'])
+		history_json: [{"date_time": "2026-10-21T11:45:35.462796+00:00", "derived_from": "1f309215dd58f049dc5a4e50eb2cb5c59c54fec6869f695f4bdc645d2c70640f.nc", "program": "podaac-l2ss-py", "version": "3.3.4rc11", "parameters": {"cut": false, "pixel_subset": false, "bbox": [[-139.03, -139.48], [57.57, 57.79]], "variables": ["geolocation/latitude_bounds", "geolocation/longitude_bounds"]}, "program_ref": "https://cmr.earthdata.nasa.gov:443/search/concepts/S1962070864-POCLOUD", "$schema": "https://harmony.earthdata.nasa.gov/schemas/history/0.1.0/history-v0.1.0.json"}]
 		input_files: TEMPO_RAD_L1_V04_20250917T215552Z_S012G09.nc, TEMPO_IRR_L1_V04_20250911T040115Z.nc, TEMPO_CLDO4_L2_V04_20250917T215552Z_S012G09.nc
 		institution: Smithsonian Astrophysical Observatory
 		keywords: EARTH SCIENCE>ATMOSPHERE>AIR QUALITY>NITROGEN OXIDES, EARTH SCIENCE>ATMOSPHERE>ATMOSPHERIC CHEMISTRY>NITROGEN COMPOUNDS>NITROGEN DIOXIDE
