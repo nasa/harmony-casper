@@ -1,4 +1,4 @@
-mirror_step,xtrack,/geolocation/latitude,/geolocation/longitude
+"mirror_step","xtrack","/geolocation/latitude","/geolocation/longitude"
 1051,91,57.77646,-139.58391
 1051,92,57.732544,-139.49364
 1052,92,57.754456,-139.6818

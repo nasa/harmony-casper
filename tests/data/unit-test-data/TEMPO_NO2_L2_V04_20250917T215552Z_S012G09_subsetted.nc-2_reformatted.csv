@@ -1,4 +1,4 @@
-mirror_step,xtrack,corner,/geolocation/latitude_bounds,/geolocation/longitude_bounds
+"mirror_step","xtrack","corner","/geolocation/latitude_bounds","/geolocation/longitude_bounds"
 1051,91,0,57.787212,-139.53462
 1051,91,1,57.809803,-139.72444
 1051,91,2,57.765728,-139.63326

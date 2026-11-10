@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 - Fixed bug related to processing variables with no dimensions. Fixed dimension partitioning where coordinate variables are in
 groups.
+- Updated to retain coordinate paths to identify coordinate variables that exist in multiple groups.
+- Switched to use pyarrow instead of pandas to improve speed.
 
 ## [1.0.1] - 2026-09-24
 

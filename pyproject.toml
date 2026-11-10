@@ -17,6 +17,7 @@ dependencies = [
     "netcdf4>=1.7.4",
     "pandas>=3.0.6",
     "xarray>=2026.7.0",
+    "pyarrow>=26.0.1",
     "pystac>=1.15.2",
     "importlib-metadata>=9.0.1",
     "requests (>=2.34.2,<3.0.0)",

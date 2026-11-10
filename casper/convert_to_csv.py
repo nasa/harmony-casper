@@ -7,6 +7,8 @@ from logging import Logger
 from pathlib import Path
 
 import pandas as pd
+import pyarrow as pa
+import pyarrow.csv as pacsv
 import xarray as xr
 from harmony_service_lib.util import generate_output_filename
 
@@ -104,6 +106,7 @@ def get_coords_paths(dt):
     paths = []
     for x in all_coords:
         paths += list(find_variable_path(dt, x))
+    paths.sort()
     return paths
 
 
@@ -209,7 +212,9 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                         chunk = ds.compute()
                         df_chunk = pd.DataFrame([{k: v.item() for k, v in ds.data_vars.items()}])
                         df_chunk.insert(loc=0, column="No dimensions", value=["True"])
-                        df_chunk.to_csv(csv_file, index=False)
+                        table = pa.Table.from_pandas(df_chunk, preserve_index=False)
+                        print(table)
+                        pacsv.write_csv(table, csv_file, write_options=pacsv.WriteOptions())
                         del df_chunk
                     else:
                         prime_dim = next(iter(ds.sizes.items()))
@@ -229,8 +234,14 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                             )
 
                             # Write header for the first chunk only
-                            df_chunk.to_csv(csv_file, header=(i == 0))
-
+                            table = pa.Table.from_pandas(
+                                df_chunk.reset_index(), preserve_index=False
+                            )
+                            pacsv.write_csv(
+                                table,
+                                csv_file,
+                                write_options=pacsv.WriteOptions(include_header=(i == 0)),
+                            )
                             del df_chunk
 
                 logger.info(f" {op_file} added to zip file")
