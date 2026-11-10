@@ -213,7 +213,6 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                         df_chunk = pd.DataFrame([{k: v.item() for k, v in ds.data_vars.items()}])
                         df_chunk.insert(loc=0, column="No dimensions", value=["True"])
                         table = pa.Table.from_pandas(df_chunk, preserve_index=False)
-                        print(table)
                         pacsv.write_csv(table, csv_file, write_options=pacsv.WriteOptions())
                         del df_chunk
                     else:
