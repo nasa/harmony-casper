@@ -20,10 +20,6 @@ def run_casper(input_file: str):
         raise ValueError("Input file not valid")
     zip_file_name = f"{Path(input_file).stem}.zip"
     convert_to_csv(input_file, zip_file_name)
-    from csv_utils import create_csv_hash_file
-
-    new_path = zip_file_name.replace(".zip", ".json")
-    create_csv_hash_file(zip_file_name, new_path)
 
 
 def main() -> None:
