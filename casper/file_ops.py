@@ -6,8 +6,8 @@ import logging
 from logging import Logger
 from pathlib import Path
 
-import netCDF4 as nc
 import numpy as np
+import xarray as xr
 
 module_logger = logging.getLogger(__name__)
 
@@ -26,14 +26,14 @@ def valid_workable_file(filename: str, logger: Logger = module_logger) -> bool:
 
     """
     try:
-        with nc.Dataset(filename, "r") as dataset:
-            if not _is_file_empty(dataset):
+        with xr.open_datatree(filename) as dt:
+            if not _is_file_empty(dt):
                 logger.debug("File is valid and non-empty: %s", filename)
             else:
                 logger.debug("File is empty: %s", filename)
         return True
     except Exception as e:
-        logger.debug("Error opening %s as netCDF: %s", filename, e)
+        logger.debug("Error opening %s: %s", filename, e)
         return False
 
 
@@ -76,8 +76,8 @@ def valid_input_file(filename: str) -> bool:
     raise ValueError(f"Input path '{path}' is not a valid file")
 
 
-def _is_file_empty(dataset: nc.Dataset | nc.Group) -> bool:
-    """Check if netCDF dataset is empty.
+def _is_file_empty(dt: xr.DataTree) -> bool:
+    """Check if xarray datatree is empty.
 
     A dataset is considered empty if all variables are:
     1. Zero size, OR
@@ -95,29 +95,30 @@ def _is_file_empty(dataset: nc.Dataset | nc.Group) -> bool:
     bool
         True if dataset is empty, False if any variable contains data
     """
-    for _var_name, var in dataset.variables.items():
-        if var.size == 0:
-            continue  # Empty variable, check next one
+    for node in dt.subtree:
+        if node.data_vars:
+            # Loop through all variables inside the current group
+            for _, ds in node.data_vars.items():
+                if ds.size == 0:
+                    continue  # Empty variable, check next one
 
-        # Get fill value if defined
-        fill_or_null = (
-            getattr(var, "_FillValue", np.nan) if "_FillValue" in var.ncattrs() else np.nan
-        )
+                # Check if variable is non-empty using three different methods
+                # Check 1: Are all values masked?
+                var_data = ds.values
 
-        # Load the data
-        var_data = var[:]
+                if np.ma.isMaskedArray(var_data) and (
+                    not var_data.mask.all() and not np.all(np.isnan(var_data.data))
+                ):
+                    return False  # Found a non-empty masked array
 
-        # Check if variable is non-empty using three different methods
-        # Check 1: Are all values masked?
-        if np.ma.isMaskedArray(var_data) and (
-            not var_data.mask.all() and not np.all(np.isnan(var_data.data))
-        ):
-            return False  # Found a non-empty masked array
+                # Check 2: Are all values equal to fill value?
+                # Check 3: Are all values NaN?
+                fill_val = ds.encoding.get("_FillValue", np.nan)
+                all_fill_val = bool((ds == fill_val).all())
+                all_nan = bool(ds.isnull().all())
 
-        # Check 2: Are all values equal to fill value?
-        # Check 3: Are all values NaN?
-        if not np.all(var_data.data == fill_or_null) and not np.all(np.isnan(var_data.data)):
-            return False  # Found a non-empty variable
+                if not all_nan and not all_fill_val:
+                    return False  # Found a non-empty variable
 
     # Check all child groups recursively, and return True if all variables and groups are empty.
-    return all(_is_file_empty(child_group) for child_group in dataset.groups.values())
+    return all(_is_file_empty(child_group) for child_group in dt.groups.values())
