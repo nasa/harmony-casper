@@ -3,6 +3,7 @@ import logging
 import sys
 import zipfile
 from collections import defaultdict
+from datetime import datetime
 from logging import Logger
 from pathlib import Path
 
@@ -185,7 +186,12 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                 # Use Harmony generated filename
                 op_file = f"{input_filename}-{idx}.csv"
                 op_file = generate_output_filename(op_file, ext="csv", is_reformatted=True)
-                with zf.open(op_file, "w", force_zip64=True) as csv_file:
+                op_file_meta = zipfile.ZipInfo(
+                    filename=op_file, date_time=datetime.now().timetuple()[:6]
+                )
+                op_file_meta.compress_type = zipfile.ZIP_DEFLATED
+
+                with zf.open(op_file_meta, "w", force_zip64=True) as csv_file:
                     ds = xr.combine_by_coords([data[vv].rename(vv) for vv in vvs + coords])
                     # Order columns: dimensions, non-dimensional coordinates, rest of variables
                     cols = list(dims) + coords + vvs
@@ -246,20 +252,24 @@ def convert_to_csv(fname: str, zip_file: str, logger: Logger = default_logger) -
                 logger.info(f" {op_file} added to zip file")
                 num_csv_files += 1
 
-            # Create markdown and json Readme files
+            # Create readme markdown file and set the creation time
             readme_contents = create_markdown(md, data, input_filename)
-            readme_file = "Readme.md"
-            with zf.open(readme_file, "w") as file:
+            op_file_meta = zipfile.ZipInfo(
+                filename="Readme.md", date_time=datetime.now().timetuple()[:6]
+            )
+            op_file_meta.compress_type = zipfile.ZIP_DEFLATED
+            with zf.open(op_file_meta, "w", force_zip64=True) as file:
                 file.write(readme_contents.encode("utf-8"))
 
-            # Create JSON file with pretty printing
+            # Create JSON Readme file and set the creation time
             json_readme(data, input_filename, json_obj)
-            json_file = "Readme.json"
             json_data = json.dumps(json_obj, indent=4) + "\n"
-            zf.writestr(json_file, json_data.encode("utf-8"))
-
-            # with zf.open(readme_file, "w") as file:
-            #    file.write(json_data.encode("utf-8"))
+            op_file_meta = zipfile.ZipInfo(
+                filename="Readme.json", date_time=datetime.now().timetuple()[:6]
+            )
+            op_file_meta.compress_type = zipfile.ZIP_DEFLATED
+            with zf.open(op_file_meta, "w", force_zip64=True) as file:
+                file.write(json_data.encode("utf-8"))
 
     except Exception as e:
         logger.error("File conversion failed: %s", e)
