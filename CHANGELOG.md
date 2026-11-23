@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### Changed
+- Updated code to set the file creation dat-time to the time the file is created. If unset, the default creation time is Jan 1, 1980, 12AM.
+
 ## [1.1.0] - 2026-11-11
 
 ## Changed
